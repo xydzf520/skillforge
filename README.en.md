@@ -520,7 +520,7 @@ DATABASE_URL_SYNC=postgresql+psycopg2://USER:PASSWORD@localhost:5432/skillforge_
 DEBUG=true COOKIE_SECURE=false python -m pytest tests/ -q
 ```
 
-Targeted regression, type-checking, build and clean-database startup records are available. The full backend suite, Docker target environment, external integrations and production deployment have outstanding acceptance work. Dependency audit findings also remain to be addressed. See the [validation record](docs/public/VALIDATION.md).
+Targeted regression, type-checking, production builds, clean-database startup and isolated Docker server deployment have been verified within the documented scope. Full backend regression, external integrations and production acceptance remain incomplete. Dependency audit results are time-sensitive; see the [latest release review](docs/public/RELEASE_CHECK_20260920.en.md) for current results and the [validation record](docs/public/VALIDATION.md) for earlier checks.
 
 Code review also identified limitations in prompt-default persistence, optimizer candidate isolation and simulated-result separation, skipped cross-model checks, and complete backup/recovery. These have not been fixed or accepted as part of this documentation work; see the [limitations and completion criteria](docs/public/CAPABILITIES.en.md). Existing screens or APIs do not establish that future automatic model selection, cost optimization or broader autonomous operation are already available.
 
