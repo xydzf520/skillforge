@@ -1,0 +1,38 @@
+# SkillForge 可选：自建 HKUDS LightRAG Server
+# 启动：cp .env.lightrag.example .env.lightrag && docker compose -f docker-compose.lightrag.yml --env-file .env.lightrag up -d
+# 后台配置：AI配置 → 向量/RAG → LightRAG Server，设置 api_base=http://127.0.0.1:9621、flavor=official、mode=server。
+services:
+  lightrag:
+    image: ghcr.io/hkuds/lightrag:latest
+    container_name: skillforge-lightrag
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${LIGHTRAG_PORT:-9621}:9621"
+    environment:
+      HOST: ${LIGHTRAG_HOST:-0.0.0.0}
+      PORT: 9621
+      LIGHTRAG_API_KEY: ${LIGHTRAG_API_KEY:-}
+      WORKING_DIR: /app/data
+      LIGHTRAG_WORKSPACE: ${LIGHTRAG_WORKSPACE:-skillforge}
+      LLM_BINDING: ${LLM_BINDING:-openai}
+      LLM_BINDING_HOST: ${LLM_BINDING_HOST:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_BINDING_API_KEY: ${LLM_BINDING_API_KEY:-}
+      EMBEDDING_BINDING: ${EMBEDDING_BINDING:-openai}
+      EMBEDDING_BINDING_HOST: ${EMBEDDING_BINDING_HOST:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-BAAI/bge-m3}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-1024}
+      EMBEDDING_BINDING_API_KEY: ${EMBEDDING_BINDING_API_KEY:-}
+      AUTH_ACCOUNTS: ${AUTH_ACCOUNTS:-}
+      TOKEN_SECRET: ${TOKEN_SECRET:-}
+    volumes:
+      - lightrag-data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "python - <<'PY'\nimport urllib.request\nurllib.request.urlopen('http://127.0.0.1:9621/health', timeout=3).read()\nPY"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  lightrag-data:

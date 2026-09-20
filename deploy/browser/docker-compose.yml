@@ -1,0 +1,37 @@
+name: skillforge
+
+services:
+  browser:
+    image: skillforge-browser:latest
+    build: .
+    container_name: skillforge-browser
+    ports:
+      # noVNC 端口仅绑定 loopback；外部访问统一走 FastAPI 的 /api/browser/novnc/* 代理
+      # （已做 session 认证 + 角色校验）。避免 VNC 协议直接暴露。
+      - "127.0.0.1:6080:6080"   # noVNC（iframe 通过 FastAPI 反代访问）
+      - "127.0.0.1:9222:9223"   # CDP（socat 转发，仅后端访问）
+    volumes:
+      - browser-data:/home/chrome/data  # 持久化 Chrome profile/cookies
+    environment:
+      - DISPLAY=:99
+      - LANG=zh_CN.UTF-8
+    shm_size: '2g'  # Chrome 需要足够的共享内存
+    restart: unless-stopped
+
+  browser-verify:
+    image: skillforge-browser:latest
+    build: .
+    container_name: skillforge-browser-verify
+    ports:
+      - "127.0.0.1:9224:9223"   # 独立登录态验证 CDP，避免与运行浏览器共享 target
+    volumes:
+      - browser-verify-data:/home/chrome/data
+    environment:
+      - DISPLAY=:99
+      - LANG=zh_CN.UTF-8
+    shm_size: '2g'
+    restart: unless-stopped
+
+volumes:
+  browser-data:
+  browser-verify-data:

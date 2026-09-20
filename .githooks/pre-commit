@@ -1,0 +1,5 @@
+#!/bin/sh
+# Checks staged content, including a stale index containing a removed secret.
+set -eu
+python3 scripts/check_public_distribution.py --staged
+git diff --cached --check

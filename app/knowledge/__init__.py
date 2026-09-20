@@ -1,0 +1,1 @@
+"""Department knowledge base domain."""

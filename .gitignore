@@ -1,0 +1,105 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+
+# 虚拟环境
+venv/
+.venv/
+
+# 环境配置（含密码，不提交）
+.env
+.env.lightrag
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+web/node_modules/
+web/dist/
+playbook-editor/node_modules/
+
+# 数据文件
+data/raw/
+!data/raw/.gitkeep
+data/cloud-video-visual-cache/
+data/knowledge_media/
+data/project-run-assets/
+data/*.pem
+data/*.key
+backups/
+
+# 本地备份/临时快照
+*.bak
+*.bak-*
+.stability-backup-*/
+
+# skills-repo（独立Git仓库，不嵌套）
+skills-repo/
+
+# pytest
+.pytest_cache/
+htmlcov/
+
+# playwright 测试输出（截图 / 结果 json）
+test-results/
+playwright-report/
+
+# 系统
+.DS_Store
+Thumbs.db
+*.pid
+.env.production
+.env.staging
+
+# 本地截图/调试目录 (审计/UI 检查临时存放, 不进版本库)
+.run/
+.codex-artifacts/
+screenshots/
+web/e2e/.auth/
+web/_inbox_screenshot.mjs
+web/_compare_shots.mjs
+scripts/_inbox_screenshot.mjs
+
+# Claude Code 本地缓存；项目级 slash command 文档允许入库
+.claude/*
+!.claude/commands/
+!.claude/commands/*.md
+
+# Git 仓库备份（本地临时）
+.git.backup.*
+
+# Public distribution never includes credentials, runtime data or private exports
+.env.*
+!.env.example
+!.env.lightrag.example
+!**/.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite*
+*.db
+*.db-*
+*.dump
+*.log
+*.har
+data/
+artifacts/
+.private/
+.gitleaks-report*
+vendor/
+*.tgz
+*.tar.gz
+
+*.deb
+
+.build/
+web/public/playbook-editor/

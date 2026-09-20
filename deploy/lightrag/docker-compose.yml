@@ -1,0 +1,71 @@
+name: skillforge
+
+services:
+  lightrag:
+    image: ${LIGHTRAG_IMAGE:-ghcr.io/hkuds/lightrag:latest}
+    container_name: skillforge-lightrag
+    restart: unless-stopped
+    ports:
+      - "${LIGHTRAG_BIND_HOST:-127.0.0.1}:${LIGHTRAG_HOST_PORT:-19621}:9621"
+    environment:
+      WORKING_DIR: /app/data/rag_storage
+      INPUT_DIR: /app/data/inputs
+      PROMPT_DIR: /app/data/prompts
+      HOST: 0.0.0.0
+      PORT: 9621
+      LIGHTRAG_DOC_STATUS_STORAGE: ${LIGHTRAG_DOC_STATUS_STORAGE:-JsonDocStatusStorage}
+      LIGHTRAG_KV_STORAGE: ${LIGHTRAG_KV_STORAGE:-JsonKVStorage}
+      LIGHTRAG_VECTOR_STORAGE: ${LIGHTRAG_VECTOR_STORAGE:-NanoVectorDBStorage}
+      LIGHTRAG_GRAPH_STORAGE: ${LIGHTRAG_GRAPH_STORAGE:-NetworkXStorage}
+      LLM_BINDING: ${LIGHTRAG_LLM_BINDING:-openai}
+      LLM_BINDING_HOST: ${LIGHTRAG_LLM_BINDING_HOST:-}
+      LLM_BINDING_API_KEY: ${LIGHTRAG_LLM_BINDING_API_KEY:-}
+      LLM_MODEL: ${LIGHTRAG_LLM_MODEL:-}
+      EMBEDDING_BINDING: ${LIGHTRAG_EMBEDDING_BINDING:-openai}
+      EMBEDDING_BINDING_HOST: ${LIGHTRAG_EMBEDDING_BINDING_HOST:-}
+      EMBEDDING_BINDING_API_KEY: ${LIGHTRAG_EMBEDDING_BINDING_API_KEY:-}
+      EMBEDDING_MODEL: ${LIGHTRAG_EMBEDDING_MODEL:-}
+      EMBEDDING_DIM: ${LIGHTRAG_EMBEDDING_DIM:-1024}
+      RERANK_BINDING: ${LIGHTRAG_RERANK_BINDING:-null}
+      RERANK_MODEL: ${LIGHTRAG_RERANK_MODEL:-}
+      RERANK_BINDING_HOST: ${LIGHTRAG_RERANK_BINDING_HOST:-}
+      RERANK_BINDING_API_KEY: ${LIGHTRAG_RERANK_BINDING_API_KEY:-}
+      VLM_PROCESS_ENABLE: ${VLM_PROCESS_ENABLE:-true}
+      VLM_LLM_BINDING: ${VLM_LLM_BINDING:-openai}
+      VLM_LLM_BINDING_HOST: ${VLM_LLM_BINDING_HOST:-}
+      VLM_LLM_BINDING_API_KEY: ${VLM_LLM_BINDING_API_KEY:-}
+      VLM_LLM_MODEL: ${VLM_LLM_MODEL:-}
+      LIGHTRAG_PARSER: "${LIGHTRAG_PARSER:-*:docling-iteP,*:native-teP,*:legacy-R}"
+      DOCLING_ENDPOINT: ${DOCLING_ENDPOINT:-http://docling:5001}
+      DOCLING_DO_OCR: ${DOCLING_DO_OCR:-true}
+      DOCLING_FORCE_OCR: ${DOCLING_FORCE_OCR:-true}
+      DOCLING_DO_FORMULA_ENRICHMENT: ${DOCLING_DO_FORMULA_ENRICHMENT:-false}
+      LIGHTRAG_API_KEY: ${LIGHTRAG_API_KEY:-}
+      LIGHTRAG_API_KEYS: ${LIGHTRAG_API_KEYS:-}
+    volumes:
+      - lightrag-rag-storage:/app/data/rag_storage
+      - lightrag-inputs:/app/data/inputs
+      - lightrag-prompts:/app/data/prompts
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      docling:
+        condition: service_started
+
+  docling:
+    image: ${DOCLING_IMAGE:-ghcr.io/docling-project/docling-serve-cpu:latest}
+    container_name: skillforge-docling
+    restart: unless-stopped
+    ports:
+      - "${DOCLING_BIND_HOST:-127.0.0.1}:${DOCLING_HOST_PORT:-15001}:5001"
+    environment:
+      DOCLING_SERVE_HOST: 0.0.0.0
+      DOCLING_SERVE_PORT: 5001
+    volumes:
+      - docling-cache:/root/.cache
+
+volumes:
+  lightrag-rag-storage:
+  lightrag-inputs:
+  lightrag-prompts:
+  docling-cache:

@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>素材工作台</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./interaction-fixes.css">
+  <link rel="stylesheet" href="./cloud-reference.css">
+  <link rel="stylesheet" href="./fde-v4.css">
+  <script src="/project-gateway-sdk.js"></script>
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="素材工作台首页">
+        <span class="brand-mark">SF</span>
+        <span><strong>素材工作台</strong><small>示例品牌内容电商运营部</small></span>
+      </a>
+      <nav class="workspace-switch" aria-label="工作区">
+        <button class="workspace-tab active" data-workspace="production">生产</button>
+        <button class="workspace-tab" data-workspace="review">审片 <span id="reviewCount" class="badge">0</span></button>
+      </nav>
+      <div class="connection"><button id="projectAdminSettings" class="button text admin-settings" type="button" title="项目管理员设置">管理设置</button><span id="connectionDot" class="status-dot"></span><span id="connectionText">正在连接</span><button id="manualRefresh" class="icon-button" title="手动刷新">↻</button></div>
+    </header>
+
+    <section id="runRecovery" class="run-recovery hidden" role="status">
+      <div><strong>当前工作台运行额度已用完</strong><span>实时节点、队列和已缓存审片仍可查看；新建生产任务请打开一个新的工作台运行。</span></div>
+      <a class="button primary" href="/project-run/samplebrand-material-workbench?view=app" target="_blank" rel="noopener">新开工作台</a>
+    </section>
+
+    <main id="productionWorkspace" class="workspace production-workspace">
+      <section class="production-main">
+        <div class="page-heading">
+          <div><p class="eyebrow">FDE 素材供给</p><h1>生产</h1><p>把真实需求变成可供编导选择的视频候选；生成成功不等于已经选用或投流。</p></div>
+          <span id="draftState" class="save-state">已自动保存</span>
+        </div>
+
+        <section class="north-star-strip" aria-label="本周素材业务指标">
+          <article><span>今日待处理</span><strong id="metricPendingRequests">0</strong><small>真实需求</small></article>
+          <article><span>正在生产</span><strong id="metricProducing">0</strong><small>GPU 任务</small></article>
+          <article><span>待审片</span><strong id="metricAwaitingSelection">0</strong><small>技术门禁已通过</small></article>
+          <article class="north-star"><span>本周已选用</span><strong id="metricWeeklySelected">0</strong><small>北极星指标</small></article>
+        </section>
+
+        <section class="request-workbench" aria-label="素材需求单">
+          <header><div><p class="eyebrow">真实需求</p><h2>素材需求单</h2><p>先保存业务需求，再由原文、AI 策略或视频复刻生成候选。</p></div><button id="newMaterialRequest" type="button" class="button secondary">＋ 新需求</button></header>
+          <div class="request-toolbar">
+            <label>需求来源<select id="requestSource"><option value="editorial">编导需求</option><option value="history">历史素材衍生</option><option value="market_structure">热门结构</option><option value="operations">运营提案</option></select></label>
+            <label>优先级<select id="requestPriority"><option value="300">紧急</option><option value="200">高</option><option value="100" selected>普通</option><option value="50">低</option></select></label>
+            <label>截止时间<input id="requestDeadline" type="datetime-local"></label>
+            <label class="request-title-field">需求标题<input id="requestTitle" placeholder="可不填，默认取产品或画面要求摘要"></label>
+            <button id="saveMaterialRequest" type="button" class="button secondary">保存需求</button>
+          </div>
+          <div class="request-current"><span id="currentRequestState">尚未保存为需求</span><button id="toggleRequestPool" type="button" class="button text">查看需求池</button></div>
+          <div id="materialRequestPool" class="request-pool hidden"><p class="empty-copy">正在读取需求池</p></div>
+        </section>
+
+        <nav class="production-mode-switch" aria-label="生产方式">
+          <button type="button" class="active" data-production-mode="direct"><strong>原文生成</strong><small>不调用 AI，按预览提示词执行</small></button>
+          <button type="button" data-production-mode="strategy"><strong>AI 策略</strong><small>三个场景方向，选中后生成</small></button>
+          <button type="button" data-production-mode="replay"><strong>视频复刻</strong><small>2–60 秒完整结构或局部替换</small></button>
+        </nav>
+
+        <form id="productionForm" class="production-form">
+          <section id="contentSection" class="form-section">
+            <div class="section-title"><div><h2>生成内容</h2><p>你的原文是最终业务要求，系统不会用 AI 结果静默覆盖。</p></div><button id="optimizePromptButton" type="button" class="button secondary prompt-optimize-trigger"><span aria-hidden="true">✦</span> 优化提示词</button></div>
+            <div class="form-grid two">
+              <div class="span-2 form-field asset-mention-field primary-prompt-field">
+                <label for="requirement">画面提示词 <small>必填</small></label>
+                <textarea id="requirement" rows="7" placeholder="直接写画面、人物、动作、场景、台词配合和不要出现的内容。可输入 @ 点名使用某张商品图或原视频。"></textarea>
+                <small class="field-hint">可直接生成；输入 <strong>@</strong> 可绑定真实素材。“优化提示词”和“AI 策略”都由你主动触发，结果不会自动覆盖原文。</small>
+                <div id="assetMentionMenu" class="asset-mention-menu hidden" role="listbox" aria-label="选择要引用的素材"></div>
+              </div>
+              <section id="promptOptimizationPanel" class="span-2 prompt-optimization hidden" aria-live="polite">
+                <header><div><span class="ai-pill">MiniMax H3 优化建议</span><strong id="promptOptimizationTitle">是否使用优化后的提示词？</strong></div><span id="promptOptimizationMeta"></span></header>
+                <p id="promptOptimizationSummary">只整理时间线、动作、镜头、声音和约束；原台词与明确保留项不变。</p>
+                <div class="prompt-optimization-compare">
+                  <details><summary>查看原文</summary><pre id="promptOptimizationOriginal"></pre></details>
+                  <label>优化稿 <small>采用前可继续修改</small><textarea id="promptOptimizationCandidate" rows="10" maxlength="7000"></textarea></label>
+                </div>
+                <details id="promptOptimizationChanges" class="prompt-optimization-changes"><summary>查看优化内容与假设</summary><div id="promptOptimizationDetails"></div></details>
+                <footer><div><strong>是否用这份优化稿生成？</strong><small>不采用就继续使用原文，不会创建任务或计费。</small></div><div><button id="keepOriginalPrompt" type="button" class="button secondary">保留原文</button><button id="retryPromptOptimization" type="button" class="button secondary">重新优化</button><button id="adoptOptimizedPrompt" type="button" class="button primary">采用优化稿</button></div></footer>
+              </section>
+              <label>产品 / SKU <small>仅用于管理</small><input id="product" placeholder="可不填；不会自动写进提示词"></label>
+              <label>产品信息用途<select id="productParticipation"><option value="task_management" selected>仅用于任务管理</option><option value="ai_strategy">加入 AI 策略</option><option value="none">不使用</option></select></label>
+              <label>投流平台<select id="platform"><option value="douyin">抖音 / 巨量千川</option><option value="xiaohongshu">小红书</option><option value="kuaishou">快手</option></select></label>
+              <label>平台信息用途<select id="platformParticipation"><option value="task_management" selected>仅用于任务管理</option><option value="ai_strategy">加入 AI 策略</option><option value="none">不使用</option></select></label>
+              <label>卖点 <small>可不填</small><input id="sellingPoints" placeholder="默认只用于任务管理"></label>
+              <label>卖点用途<select id="sellingPointsParticipation"><option value="task_management" selected>仅用于任务管理</option><option value="ai_strategy">加入 AI 策略</option><option value="none">不使用</option></select></label>
+              <label>活动信息 <small>可不填</small><input id="promotion" placeholder="AI 不会自行编造价格或活动"></label>
+              <label>活动信息用途<select id="promotionParticipation"><option value="task_management" selected>仅用于任务管理</option><option value="ai_strategy">加入 AI 策略</option><option value="none">不使用</option></select></label>
+              <label class="span-2">文案或完整台词<textarea id="script" rows="5" placeholder="可不填。粘贴口播、双人对话或成片文案。"></textarea><small id="scriptTimingHint" class="field-hint">未填写台词；可直接生成纯画面镜头。</small></label>
+            </div>
+          </section>
+
+          <section id="assetSection" class="form-section">
+            <div class="section-title asset-section-title"><div><h2>参考素材 <em>可选</em></h2><p>上传后先确认用途，确认即参与生成；只有需要在画面描述中点名素材时才使用“插入 @素材名”。</p></div><span id="assetCountBadge" class="asset-count-badge">0 个素材</span></div>
+            <div id="assetDrop" class="asset-drop">
+              <input id="assetUpload" type="file" accept="image/*,video/*,audio/*" multiple>
+              <div><strong>拖入素材，或点击选择</strong><p id="assetUploadStatus" role="status" aria-live="polite">普通生成最多 9 图 / 3 视频 / 3 音频；复刻源视频支持 2–60 秒。</p></div>
+              <div class="asset-actions"><button id="assetLibraryOpen" type="button" class="button secondary">部门素材库</button><button id="cloudReferenceOpen" type="button" class="button secondary">从云视频查找</button></div>
+            </div>
+            <div id="assetSelectionSummary" class="asset-selection-summary" role="status" aria-live="polite"><strong>尚未添加素材</strong><span>可直接文生视频</span></div>
+            <div id="selectedAssets" class="selected-assets"><p class="empty-copy">不添加素材也可以直接文生视频。</p></div>
+            <section id="assetRecommendation" class="asset-recommendation hidden" aria-live="polite">
+              <div class="asset-recommendation-head"><div><strong>智能匹配产品素材</strong><span id="assetRecommendationSummary">根据产品词和画面动作选择最合适视图</span></div><button id="refreshAssetRecommendation" type="button" class="button text">重新匹配</button></div>
+              <div id="assetRecommendationItems" class="asset-recommendation-items"></div>
+            </section>
+            <p class="asset-policy-note"><strong>部门自有素材</strong><span>版权、肖像和声音授权由系统按部门素材策略自动留痕，无需重复确认。</span></p>
+          </section>
+
+          <section id="outputSection" class="form-section">
+            <div class="section-title"><div><h2>输出设置</h2><p>默认值可直接生产；只需要确认时长、画幅、数量和清晰度。</p></div></div>
+            <div class="settings-grid">
+              <label>镜头时长<select id="duration"><option value="3">3 秒投流钩子</option><option value="5" selected>5 秒（推荐）</option><option value="6">6 秒</option><option value="7">7 秒</option><option value="8">8 秒</option><option value="9">9 秒</option><option value="10">10 秒</option><option value="11">11 秒</option><option value="12">12 秒</option><option value="13">13 秒</option><option value="14">14 秒</option><option value="15">15 秒</option></select></label>
+              <label>画面比例<select id="ratio"><option value="9:16" selected>9:16 竖屏投流（推荐）</option><option value="16:9">16:9 横屏</option></select></label>
+              <label>生成数量<input id="quantity" type="number" min="1" max="600" value="1"></label>
+            </div>
+            <label class="commercial-appearance-control"><input id="commercialAppearance" type="checkbox" checked><span><strong>人物商业质感</strong><small>有人物时采用精致自然商业妆造和真实皮肤纹理；复刻保留人物身份，局部替换不改人物像素。</small></span></label>
+            <div id="directPromptPanel" class="direct-prompt-panel hidden legacy-control">
+              <label>H3 画面提示词<textarea id="directH3Prompt" rows="10" maxlength="7000" placeholder="3.0 原文生成以页面可见的最终提示词为准，不调用 DeepSeek，也不追加人物、场景、动作或配音规则。"></textarea></label>
+              <div><strong>3.0 原文生成</strong><span>页面预览与 Bridge 实际执行提示词必须逐字一致；旧任务仍保留历史策略血缘和重试能力。</span></div>
+            </div>
+            <div class="inline-status"><span>系统判断</span><strong id="inferredMode">文生视频</strong><small id="modeReason">未添加素材，使用纯文本生成</small></div>
+            <div id="systemRecommendation" class="system-recommendation">
+              <div><span>系统推荐</span><strong id="intentLabel">用户提示词直接生产</strong></div>
+              <p id="routingReason">用户提示词可直接生产；系统只负责素材校验、H3 编译和节点路由。需要润色时再点击 AI 优化。</p>
+            </div>
+
+            <div class="subsection-head"><h3>清晰度</h3><span>全部档位均可选择；高清档耗时和显存占用更高</span></div>
+            <div id="presetCards" class="preset-cards"><div class="preset-card selected"><strong>极速试片</strong><span>480 × 864</span><small>正在读取节点基准</small></div></div>
+
+            <details class="optional-tools legacy-control hidden"><summary>旧版兼容设置</summary><div class="optional-tools-body">
+              <label>创作方式<select id="creativeOption">
+                <option value="smart">智能判断（推荐）</option><option value="reference_replay">参考复刻</option>
+                <option value="talking_product">口播换品</option><option value="product_frame">商品首帧</option>
+                <option value="dialogue">双人对话</option><option value="continuation">自动续写</option><option value="direct_prompt">直接 H3 提示词（专家）</option>
+              </select></label>
+              <div class="option-row">
+                <label class="switch"><input id="themeEnabled" type="checkbox"><i></i><span><strong>主题发散</strong><small>主动开启后才调用 AI 生成多个投流方向</small></span></label>
+                <div id="themeSettings" class="inline-setting hidden"><label>方向数<input id="directionCount" type="number" min="3" max="12" value="6"></label><label>每方向变体<input id="variantsPerDirection" type="number" min="1" max="20" value="1"></label></div>
+              </div>
+              <fieldset class="schedule-fieldset"><legend>什么时候生成</legend>
+                <label><input type="radio" name="schedule" value="immediate" checked><span><strong>立即生成</strong><small>有空闲节点就开始</small></span></label>
+                <label><input type="radio" name="schedule" value="night"><span><strong>今晚空闲时</strong><small>默认 20:00–次日 09:00</small></span></label>
+                <label><input type="radio" name="schedule" value="custom"><span><strong>自定义</strong><small>设置开始和截止时间</small></span></label>
+              </fieldset>
+              <div id="customSchedule" class="settings-grid hidden"><label>开始<input id="notBefore" type="datetime-local"></label><label>截止<input id="deadline" type="datetime-local"></label></div>
+            </div></details>
+
+            <details class="advanced"><summary>技术设置</summary><div class="advanced-grid">
+              <label>随机种子<input id="seed" type="number" value="-1"></label>
+              <label class="compact-check"><input id="audioEnabled" type="checkbox" checked> 自动生成最终声音</label>
+              <label class="compact-check legacy-control hidden"><input id="containsPerson" type="checkbox"> 素材含人物</label>
+              <label class="compact-check legacy-control hidden"><input id="containsVoice" type="checkbox"> 素材含人声</label>
+              <label class="compact-check legacy-control hidden"><input id="stripReferenceText" type="checkbox" checked> 复刻时去除原视频文字（保留新台词音频）</label>
+              <label class="legacy-control hidden">复刻人物<select id="referenceIdentityPolicy"><option value="replace_actor">换成新演员（推荐）</option><option value="preserve_source">保留原人物</option></select></label>
+            </div></details>
+          </section>
+
+          <section id="strategyPanel" class="form-section strategy-panel hidden">
+            <div class="section-title"><div><h2>三个场景方向</h2><p>AI 只优化场景、自然动作和镜头节奏。A、B 台词逐字不变；C 的台词建议必须明确确认。</p></div><button id="regenerateStrategy" type="button" class="button secondary" data-strategy-action>重新生成三个方向</button></div>
+            <div id="strategyStatus" class="notice">点击“生成三个方向”后在这里选择一个或多个方案。</div>
+            <div id="strategyActionFeedback" class="strategy-action-feedback hidden" role="status" aria-live="polite"></div>
+            <div id="strategyDirectionGrid" class="strategy-direction-grid"></div>
+            <div id="strategyQuestions" class="strategy-questions hidden"></div>
+            <div id="strategyCompiledPlans" class="strategy-compiled-plans"></div>
+          </section>
+
+          <section id="replayPanel" class="form-section replay-panel hidden">
+            <div class="section-title"><div><h2>视频复刻</h2><p>在上方素材区选择并确认一条 2–60 秒源视频。结构复刻覆盖完整时间线；局部替换保留原片像素。</p></div></div>
+            <div class="replay-engine-note"><strong>MiniMax H3 能力边界</strong><span>H3 支持 4–15 秒生成、参考图片 / 视频 / 音频和 768P / 2K 输出；超过 15 秒由系统分段连续生成。精准改数字或一句口播不让 H3 重绘整帧，改走受控局部编辑。</span></div>
+            <div class="replay-mode-cards">
+              <label><input type="radio" name="replayMode" value="full_structure" checked><span><strong>H3 全时长结构复刻</strong><small>每段引用原视频，由 MiniMax H3 重新生成；切成 4–15 秒片段后检测接缝并拼接</small></span></label>
+              <label><input type="radio" name="replayMode" value="local_replace"><span><strong>精准局部替换</strong><small>保留原片像素，定位文字 / 口播 / 商品后跟踪、修复并合成；不是 H3 全画面重生成</small></span></label>
+            </div>
+            <div class="settings-grid replay-controls">
+              <label>人物<select id="replayPeople"><option value="preserve">保留原人物</option><option value="replace">更换人物</option></select></label>
+              <label>画面文字<select id="replayText"><option value="keep" selected>保留原文字</option><option value="remove">去除全部可识别文字</option><option value="targeted">替换指定文字 / 数据</option></select></label>
+              <label>商品<select id="replayProduct"><option value="keep">保留原商品</option><option value="replace">替换商品</option><option value="remove">不展示商品</option></select></label>
+              <label>声音<select id="replayAudio"><option value="redub" selected>整段重新配音</option><option value="partial_redub">只替换指定口播</option><option value="original">使用原音</option><option value="silent">静音</option></select></label>
+              <label>场景<select id="replayScene"><option value="preserve" selected>保持原场景</option><option value="flexible">不强制保持</option></select></label>
+              <label>镜头运动<select id="replayCamera"><option value="preserve" selected>保持原镜头运动</option><option value="flexible">不强制保持</option></select></label>
+            </div>
+            <section id="localReplacementPanel" class="local-replacement-panel hidden">
+              <div class="local-replacement-head"><div><h3>替换画面或口播中的数据</h3><p>填写原内容和新内容；系统只修改匹配区域或口播片段，其他画面和声音保持原样。</p></div><button id="addReplayReplacement" type="button" class="button secondary">＋ 再加一项</button></div>
+              <div id="localReplacementList" class="local-replacement-list"></div>
+              <p id="localReplacementHint" class="field-hint">例如把“已抢购 3000 单”替换为“已抢购 5000 单”。没有画面文字时可选择“只改口播”。</p>
+            </section>
+            <div class="replay-actions">
+              <button id="analyzeReplay" type="button" class="button secondary">分析完整源视频</button>
+              <button id="previewReplay" type="button" class="button secondary" disabled>更新执行预览</button>
+              <button id="generateReplay" type="button" class="button primary" disabled>生成复刻视频</button>
+              <span id="replayStatus">尚未分析</span>
+            </div>
+            <div id="replayTimeline" class="replay-timeline"></div>
+          </section>
+
+          <section id="planResult" class="plan-result hidden">
+            <div class="plan-head"><div><span class="ai-pill" id="visionModel">素材校验</span><span class="pipeline-arrow">→</span><span class="ai-pill" id="plannerModel">用户原始提示词</span><h2 id="planResultTitle">执行提示词预览</h2></div><div class="plan-head-actions"><button id="useOperatorPromptButton" type="button" class="button text hidden">放弃 AI 优化，按原文生成</button><span id="policyVersion">minimax-h3-context-ir-v60</span></div></div>
+            <div id="sourceUnderstanding" class="source-understanding hidden"></div>
+            <div id="firstFrameRecommendation" class="first-frame-recommendation hidden">
+              <div class="first-frame-copy"><span class="recommended">推荐</span><div><strong>先锁定人物与中景构图</strong><p id="firstFrameReason">先生成并检查人物首帧，再用 H3 图生视频，减少人物漂移和动作被裁切。</p></div></div>
+              <div id="firstFramePreview" class="first-frame-preview hidden"></div>
+              <button id="generateFirstFrameButton" type="button" class="button primary">生成人物首帧</button>
+            </div>
+            <div id="scriptTimingResult" class="script-timing-result hidden"></div>
+            <div id="planWarnings" class="warning-list"></div>
+            <div id="directionGrid" class="direction-grid"></div>
+            <details><summary>查看分镜和最终 H3 提示词</summary><div id="shotList" class="shot-list"></div><div class="prompt-actions"><small id="promptEditStatus">服务端确定性编译结果 · 可编辑</small><button id="recompileShots" type="button" class="button secondary hidden">重新编译 H3 提示词</button></div><textarea id="compiledPrompt" rows="9"></textarea></details>
+          </section>
+
+          <div id="prepareError" class="prepare-error hidden" role="alert" aria-live="assertive"></div>
+          <div id="submitReceipt" class="submit-receipt hidden" role="status" aria-live="polite"></div>
+
+          <div class="submit-bar">
+            <div><strong id="submitSummary">1 条 · 极速试片 · 立即生成</strong><small id="submitEta">等待节点 ETA</small><small id="submitBlockReason" class="submit-block-reason">填写画面提示词后可直接生成</small></div>
+            <button id="prepareButton" type="button" class="button secondary large">生成三个方向</button>
+            <button id="submitButton" type="submit" class="button primary large" disabled>直接生成</button>
+          </div>
+        </form>
+        <details class="resource-panel"><summary><span>资源与调度</span><span id="onlineNodeCount">0 在线</span></summary><div class="production-aside">
+          <section><p class="eyebrow">当前任务</p><h3 id="asideProduct">待从需求或素材识别</h3><dl><div><dt>模式</dt><dd id="asideMode">文生视频</dd></div><div><dt>输出</dt><dd id="asidePreset">480 × 864 · 5 秒</dd></div><div><dt>数量</dt><dd id="asideQuantity">1 条</dd></div></dl></section>
+          <section><div class="aside-title"><h3>可用生产节点</h3></div><div id="nodeStatusList" class="node-list"><p class="empty-copy">等待节点上报</p></div></section>
+          <section class="aside-note"><strong>系统自动编排</strong><p>无需手动选 GPU。普通生成按 3–15 秒单镜头执行；2–60 秒源视频请使用“视频复刻”，系统按完整时间线分段处理。</p></section>
+        </div></details>
+        <footer class="workbench-version" aria-label="素材工作台版本">FDE 素材供给系统 <strong>v4.1.0</strong></footer>
+      </section>
+
+      <section id="globalQueue" class="queue-drawer collapsed" role="dialog" aria-modal="false" aria-label="生产队列">
+        <button id="queueToggle" class="queue-handle" aria-expanded="false"><span><strong>生产队列</strong><small id="queueSummary">正在读取</small></span><i>⌃</i></button>
+        <div class="queue-body"><div class="queue-toolbar"><div class="filter-tabs"><button class="active" data-job-filter="active">运行中</button><button data-job-filter="all">全部</button><button data-job-filter="awaiting_review">待审</button><button data-job-filter="failed">失败</button></div><button id="queueRefresh" class="button text">刷新</button></div><div id="jobTable" class="job-table"></div><button id="loadMoreJobs" class="button secondary full hidden">加载更多</button></div>
+      </section>
+    </main>
+
+    <main id="reviewWorkspace" class="workspace review-workspace hidden">
+      <header class="review-toolbar">
+        <div><p class="eyebrow">编导素材选择 · 默认最新进入选片池</p><h1>审片</h1></div>
+        <div class="review-filters"><select id="reviewStatus"><option value="pending">待我选片</option><option value="selected">已选用</option><option value="held">暂缓</option><option value="rejected">已驳回</option><option value="all">全部</option></select><select id="reviewMethod"><option value="all">全部生成方式</option><option value="direct">原文直出</option><option value="ai_strategy">AI 策略</option><option value="replay">视频复刻</option><option value="historical">历史候选</option></select><select id="reviewSource"><option value="all">全部来源</option><option value="editorial">编导需求</option><option value="history">历史衍生</option><option value="market_structure">热门结构</option><option value="operations">运营提案</option></select><select id="reviewSort"><option value="selection_latest">最新进入选片池</option><option value="selected_latest">最近选用</option><option value="quality">AI 质量建议</option><option value="spend">真实消耗</option><option value="created_latest">最近生成</option></select><input id="reviewProduct" placeholder="产品"><input id="reviewBatch" placeholder="批次 ID"><input id="reviewAssignee" placeholder="负责人 ID"><div class="review-search-composer"><input id="reviewSearch" placeholder="搜索标题、需求、产品或候选 ID"><div id="reviewTagChips" class="review-tag-chips"></div><input id="reviewTagInput" list="reviewTagSuggestions" placeholder="添加标签筛选"><datalist id="reviewTagSuggestions"></datalist></div><button id="reviewRefresh" class="button secondary">搜索</button></div>
+      </header>
+      <section id="reviewWallView" class="review-wall-view">
+        <aside class="review-wall-nav" aria-label="选片视图">
+          <button class="active" data-review-view="pending">待我选片 <b id="wallPendingCount">0</b></button>
+          <button data-review-view="new">本周新素材</button>
+          <button data-review-view="selected">已选用</button>
+          <button data-review-view="held">暂缓</button>
+          <button data-review-view="rejected">已驳回</button>
+          <button data-review-view="delivered">已入库</button>
+          <button data-review-view="unlinked">待归因</button>
+          <button data-review-view="spending">已产生消耗</button>
+          <hr>
+          <button id="reviewNewRequest" class="new-request-link">＋ 新需求</button>
+        </aside>
+        <section class="material-wall-area">
+          <div class="material-wall-head"><div><strong id="materialWallTitle">待我选片</strong><span id="materialWallSummary">正在读取候选素材</span></div><div class="wall-density" aria-label="显示密度"><button data-wall-density="comfortable" class="active">舒适</button><button data-wall-density="compact">紧凑</button></div></div>
+          <div id="materialWall" class="material-wall"><p class="empty-copy">正在读取候选素材</p></div>
+          <button id="loadMoreCandidates" class="button secondary wall-load-more hidden">加载更多候选</button>
+        </section>
+      </section>
+      <dialog id="reviewDialog" class="review-dialog">
+      <button id="closeReviewDialog" class="review-dialog-close" type="button" aria-label="关闭审片窗口" title="关闭（Esc）">×</button>
+      <div id="reviewImmersive" class="review-layout">
+        <aside class="review-inbox">
+          <div class="inbox-actions"><button id="backToMaterialWall" class="button text">← 返回素材墙</button><label><input id="reviewSelectAll" type="checkbox"> 本页全选</label><button id="batchAssign" class="button text">标签</button><button id="batchHold" class="button text">批量暂缓</button><button id="batchReject" class="button danger-text">批量驳回</button></div>
+          <div id="reviewList" class="review-list"><p class="empty-copy">正在读取待审素材</p></div>
+          <button id="loadMoreReviews" class="button secondary full hidden">加载更多</button>
+        </aside>
+
+        <section class="review-viewer">
+          <div class="viewer-head"><div><span id="reviewBatchProgress" class="review-progress">候选 —/—</span><h2 id="reviewJobTitle">选择一条素材开始审片</h2><div class="review-media-meta"><p id="reviewJobMeta">封面、视频和关键帧将在这里显示</p><span id="reviewAudioStatus" class="audio-status loading" aria-live="polite">音轨状态待读取</span></div></div><div class="compare-controls"><button id="previousCandidate" class="button secondary" title="上一条">← 上一条</button><button id="nextCandidate" class="button secondary" title="下一条">下一条 →</button><button id="enhance1080Button" class="button secondary" disabled>生成 1080p 高清版</button><select id="compareJobSelect"><option value="">选择 B 片</option></select><button id="compareToggle" class="button secondary">A/B 对比</button></div></div>
+          <div id="viewerShell" class="viewer-shell"><video id="reviewVideoA" controls playsinline preload="metadata"></video><video id="reviewVideoB" class="hidden" controls playsinline preload="metadata" muted></video><div id="noVideo" class="viewer-empty"><span>▶</span><p>从左侧选择待审视频</p></div></div>
+          <div class="player-tools"><button id="reviewPlayToggle" class="play-toggle" type="button" disabled aria-pressed="false" title="选择成片后播放">▶ 播放</button><button id="reviewSoundToggle" class="sound-toggle" type="button" disabled aria-pressed="false" title="选择成片后检查音轨">无音轨</button><button id="frameBack" title="上一帧">← 帧</button><span id="timecode">00:00.000</span><button id="frameForward" title="下一帧">帧 →</button><select id="playbackRate"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div>
+          <div id="filmstrip" class="filmstrip"></div>
+          <canvas id="waveform" width="1000" height="56" aria-label="音频波形"></canvas>
+          <div class="annotation-box"><div><strong>问题标注</strong><span>定位到当前播放时间</span></div><select id="annotationCategory"><option value="brand">包装/品牌</option><option value="text">文字</option><option value="motion">动作</option><option value="composition">构图/场景</option><option value="continuity">连续性</option><option value="human_shape">人物联想</option><option value="commercial">卖点/活动</option><option value="technical">技术问题</option><option value="other">其他</option></select><select id="annotationSeverity"><option value="warning">一般</option><option value="critical">严重</option><option value="note">备注</option></select><input id="annotationEnd" type="number" min="0" step="0.1" placeholder="结束秒（可空）"><textarea id="annotationNote" rows="2" placeholder="说明问题和修改建议"></textarea><button id="saveAnnotation" class="button secondary">保存标注</button></div>
+        </section>
+
+        <aside class="review-inspector">
+          <div id="materialStageNotice" class="material-stage-notice hidden"></div>
+          <section><div class="aside-title"><h3>标签</h3><button id="editCandidateTags" class="button text">编辑</button></div><div id="reviewCandidateTags" class="candidate-tag-list"><span class="empty-copy">选择候选后显示标签</span></div></section>
+          <section><div class="aside-title"><h3>AI 质检</h3><button id="runQualityAnalysis" class="button text">重新分析</button></div><div id="qualityRuntime" class="quality-runtime"><span>质检模型待任务上报</span></div><div id="qualitySummary" class="quality-summary empty-copy">选择视频后显示九维质量评分</div></section>
+          <section><h3>严重问题</h3><div id="criticalIssues" class="issue-list"><p class="empty-copy">暂无结论</p></div></section>
+          <section><h3>修改建议</h3><div id="repairAdvice" class="advice-box">选择视频后显示</div></section>
+          <details class="review-details"><summary>质检详情与素材血缘</summary><div id="sourceStrip" class="source-strip"></div><div id="gateList" class="gate-list"></div><pre id="lineageData">{}</pre><button id="downloadProvenance" type="button" class="button secondary full" disabled>下载制作凭证 JSON</button></details>
+          <div class="review-actions"><button id="dialogueDeliveryButton" class="button secondary large hidden">生成独立配音成片</button><button id="holdButton" class="button secondary large">暂缓</button><button id="rejectButton" class="button danger large">驳回并返回生产</button><button id="approveButton" class="button primary large">编导选用</button><button id="deliveryButton" class="button secondary large hidden">同步素材库</button></div>
+          <p class="hard-gate-note">AI 质量结果仅作建议；技术通过与编导选用相互独立；系统禁止批量选用。</p>
+          <footer class="workbench-version" aria-label="素材工作台版本">FDE 素材供给系统 <strong>v4.1.0</strong></footer>
+        </aside>
+      </div>
+      </dialog>
+    </main>
+
+    <main id="agentWorkspace" class="workspace agent-workspace hidden">
+      <header class="agent-heading">
+        <div><p class="eyebrow">MiniMax H3 · 可管理 Agent</p><h1>Agent</h1><p>标准生成仍可按原文直接执行；提示词优化和视频复刻分别调用下方真实 Agent。</p></div>
+        <span id="agentLoadStatus" class="save-state">进入后读取个人配置</span>
+      </header>
+      <div class="agent-layout">
+        <aside id="agentList" class="agent-list" aria-label="Agent 列表">
+          <p class="empty-copy">正在读取 Agent</p>
+        </aside>
+        <section class="agent-editor">
+          <header class="agent-editor-head">
+            <div><span id="agentCustomBadge" class="ai-pill">默认版本</span><h2 id="agentEditorTitle">选择 Agent</h2><p id="agentEditorDescription">编辑只影响你在当前素材工作台中的调用。</p></div>
+            <dl><div><dt>模型</dt><dd id="agentModel">deepseek-v4-flash</dd></div><div><dt>版本</dt><dd id="agentVersion">v1</dd></div></dl>
+          </header>
+          <label class="agent-prompt-label" for="agentSystemPrompt">Agent 指令</label>
+          <textarea id="agentSystemPrompt" rows="24" maxlength="60000" spellcheck="false" placeholder="Agent 系统指令"></textarea>
+          <div class="agent-editor-actions">
+            <span id="agentSaveStatus">尚未修改</span>
+            <button id="restoreAgent" type="button" class="button secondary">恢复默认</button>
+            <button id="saveAgent" type="button" class="button primary">保存新版本</button>
+          </div>
+          <section class="agent-test-panel">
+            <div><h3>试运行</h3><p>只调用 Agent 生成预览，不会创建视频任务。</p></div>
+            <textarea id="agentTestRequest" rows="5" placeholder="输入一段真实需求，验证当前 Agent 指令。"></textarea>
+            <button id="invokeAgent" type="button" class="button secondary">调用当前 Agent</button>
+            <pre id="agentTestResult">等待试运行</pre>
+          </section>
+        </section>
+      </div>
+      <footer class="workbench-version" aria-label="素材工作台版本">FDE 素材供给系统 <strong>v4.1.0</strong></footer>
+    </main>
+
+    <dialog id="cloudReferenceDialog" class="cloud-dialog">
+      <form method="dialog" class="dialog-head"><div><h2>云视频参考</h2><p>只通过 SkillForge 受控连接器读取。</p></div><button class="icon-button">×</button></form>
+      <div class="cloud-search"><input id="cloudSearch" value="示例品牌" placeholder="搜索视频名或产品"><button id="cloudSearchButton" class="button primary">搜索</button></div>
+      <div id="cloudNotice" class="notice"></div><div id="cloudResults" class="cloud-results"></div>
+    </dialog>
+
+    <dialog id="assetLibraryDialog" class="cloud-dialog">
+      <form method="dialog" class="dialog-head"><div><h2>部门素材库</h2><p>保存一次，后续任务直接复用原始素材与授权血缘。</p></div><button class="icon-button">×</button></form>
+      <div class="cloud-search"><input id="assetLibrarySearch" placeholder="搜索素材名称或标签"><button id="assetLibraryRefresh" type="button" class="button primary">刷新</button></div>
+      <div id="assetLibraryNotice" class="notice">只显示示例品牌内容电商运营部的可用素材。</div><div id="assetLibraryResults" class="cloud-results"></div>
+    </dialog>
+
+    <dialog id="assetPreviewDialog" class="asset-preview-dialog">
+      <form method="dialog" class="dialog-head"><div><h2 id="assetPreviewTitle">素材预览</h2><p>预览原始素材，不触发生成。</p></div><button class="icon-button">×</button></form>
+      <div id="assetPreviewBody" class="asset-preview-body"></div>
+    </dialog>
+
+    <dialog id="textInputDialog" class="text-input-dialog">
+      <form id="textInputForm" class="text-input-form">
+        <div class="dialog-head"><div><h2 id="textInputTitle">填写信息</h2><p id="textInputDescription"></p></div><button id="textInputCancel" type="button" class="icon-button" aria-label="取消">×</button></div>
+        <div class="text-input-body">
+          <textarea id="textInputValue" rows="6"></textarea>
+          <input id="textInputSingleValue" class="hidden">
+          <p id="textInputError" class="dialog-error" role="alert"></p>
+        </div>
+        <div class="dialog-actions"><button id="textInputCancelFooter" type="button" class="button secondary">取消</button><button id="textInputConfirm" type="submit" class="button primary">确认</button></div>
+      </form>
+    </dialog>
+
+    <div id="toastRegion" class="toast-region" aria-live="polite"></div>
+  </div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

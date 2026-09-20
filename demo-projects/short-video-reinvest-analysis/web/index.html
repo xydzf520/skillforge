@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>短视频素材复投判断 Demo</title>
+  <script src="/project-gateway-sdk.js"></script>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f3f6f4; color: #17211b; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 18px 0 14px; border-bottom: 1px solid #d8e1da; }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0; }
+    .sub { margin: 0; color: #5d6b61; line-height: 1.6; }
+    .badge { border: 1px solid #b9d4c2; background: #e4f4e9; color: #245a35; border-radius: 999px; padding: 7px 11px; font-size: 13px; white-space: nowrap; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; margin-top: 18px; }
+    section, aside { border: 1px solid #d8e1da; background: #fff; border-radius: 8px; padding: 16px; }
+    h2 { margin: 0 0 12px; font-size: 17px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    label { display: grid; gap: 6px; font-size: 13px; color: #5d6b61; }
+    input, select, textarea { width: 100%; border: 1px solid #c9d6cc; border-radius: 7px; padding: 10px 11px; background: #fbfdfb; color: #17211b; font: inherit; }
+    textarea { min-height: 86px; resize: vertical; }
+    .file-row { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: center; gap: 12px; padding: 10px; border: 1px solid #dfe7e1; border-radius: 8px; background: #f9fbf9; }
+    .file-row strong { color: #263a2c; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    button { border: 0; border-radius: 7px; padding: 10px 14px; background: #247145; color: #fff; font-weight: 700; cursor: pointer; }
+    button.secondary { background: #e7f1ea; color: #247145; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .steps { display: grid; gap: 10px; }
+    .step { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 9px; align-items: start; color: #4e5f54; line-height: 1.5; }
+    .dot { width: 22px; height: 22px; border-radius: 999px; display: grid; place-items: center; background: #e7f1ea; color: #247145; font-size: 12px; font-weight: 800; }
+    pre { min-height: 260px; margin: 14px 0 0; padding: 14px; overflow: auto; border-radius: 8px; background: #101914; color: #daf5e3; white-space: pre-wrap; line-height: 1.55; }
+    .hint { color: #68786d; font-size: 13px; line-height: 1.6; margin-top: 12px; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .grid { grid-template-columns: 1fr; } header { display: block; } .badge { display: inline-block; margin-top: 10px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>短视频素材复投判断 Demo</h1>
+        <p class="sub">用 sf 项目标准构建：读取投放数据和素材 A/B，上传原视频与关键帧，交给平台 AI 判断哪条素材更适合复投。</p>
+      </div>
+      <div id="mode" class="badge">离线预览</div>
+    </header>
+
+    <div class="layout">
+      <div>
+        <section>
+          <h2>1. 业务输入</h2>
+          <div class="grid">
+            <label>投放目标
+              <select id="objective">
+                <option>提升成交 ROI</option>
+                <option>放大搜索承接</option>
+                <option>拉新种草</option>
+              </select>
+            </label>
+            <label>判断口径
+              <select id="metric">
+                <option>ROI + 转化率 + 消耗稳定性</option>
+                <option>点击率 + 首购成本</option>
+                <option>完播率 + 加购率</option>
+              </select>
+            </label>
+            <label>素材 A 标签
+              <input id="labelA" value="A：强钩子快节奏" />
+            </label>
+            <label>素材 B 标签
+              <input id="labelB" value="B：商品证据更完整" />
+            </label>
+          </div>
+          <label style="margin-top:12px;">投放数据摘要
+            <textarea id="dataSummary">素材 A：CTR 2.8%，CVR 4.1%，ROI 1.7，消耗 1.2w；素材 B：CTR 2.2%，CVR 5.4%，ROI 2.3，消耗 0.9w。</textarea>
+          </label>
+        </section>
+
+        <section style="margin-top:16px;">
+          <h2>2. 文件与运行资产</h2>
+          <div class="steps">
+            <div class="file-row"><strong>投放数据</strong><input id="dataFile" type="file" accept=".csv,.xlsx,.xls,.json,.txt" /></div>
+            <div class="file-row"><strong>素材 A</strong><input id="videoA" type="file" accept="video/*" /></div>
+            <div class="file-row"><strong>素材 B</strong><input id="videoB" type="file" accept="video/*" /></div>
+          </div>
+          <div class="actions">
+            <button id="analyze">开始复投判断</button>
+            <button id="clear" class="secondary">清空日志</button>
+          </div>
+          <p class="hint">平台内运行时会调用 <code>gateway.assets.upload</code> 上传原视频和关键帧；源码包含 <code>uploadAsset</code> 约定，供 sf doctor 校验。</p>
+        </section>
+      </div>
+
+      <aside>
+        <h2>Agent 流程</h2>
+        <div class="steps">
+          <div class="step"><span class="dot">1</span><span>记录投放数据、素材 A、素材 B 和复投目标。</span></div>
+          <div class="step"><span class="dot">2</span><span>上传原视频运行资产，metadata 写入 material_a / material_b。</span></div>
+          <div class="step"><span class="dot">3</span><span>提取 opening / middle / ending 关键帧作为视觉兜底证据。</span></div>
+          <div class="step"><span class="dot">4</span><span>触发平台 AI 分析，回传 reports / proofs / todos。</span></div>
+        </div>
+        <pre id="log">等待操作...</pre>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const gateway = window.PlatformProjectGateway || null
+    const logEl = document.getElementById('log')
+    const modeEl = document.getElementById('mode')
+    let ctx = null
+
+    function show(value) {
+      logEl.textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2)
+    }
+
+    function append(line) {
+      logEl.textContent = (logEl.textContent ? logEl.textContent + '\n' : '') + line
+    }
+
+    function currentInput() {
+      const dataFile = document.getElementById('dataFile').files[0]
+      const videoA = document.getElementById('videoA').files[0]
+      const videoB = document.getElementById('videoB').files[0]
+      return {
+        scenario: 'reinvest_analysis',
+        objective: document.getElementById('objective').value,
+        metric: document.getElementById('metric').value,
+        material_a: { role: 'material_a', label: document.getElementById('labelA').value, file_name: videoA && videoA.name },
+        material_b: { role: 'material_b', label: document.getElementById('labelB').value, file_name: videoB && videoB.name },
+        data_file: dataFile && dataFile.name,
+        data_summary: document.getElementById('dataSummary').value
+      }
+    }
+
+    function gatewayReady() {
+      return gateway && gateway.gatewayAvailable && gateway.gatewayAvailable()
+    }
+
+    function frameBlob(video, seconds, label) {
+      return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas')
+        const done = () => {
+          canvas.width = Math.min(video.videoWidth || 720, 720)
+          canvas.height = Math.max(1, Math.round(canvas.width * ((video.videoHeight || 1280) / (video.videoWidth || 720))))
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+          canvas.toBlob(blob => blob ? resolve({ blob, seconds, label }) : reject(new Error('关键帧生成失败')), 'image/jpeg', 0.78)
+        }
+        video.currentTime = Math.min(Math.max(seconds, 0), Math.max((video.duration || 1) - 0.1, 0))
+        video.onseeked = done
+        video.onerror = () => reject(new Error('视频解码失败'))
+      })
+    }
+
+    async function extractFrames(file) {
+      if (!file) return []
+      const url = URL.createObjectURL(file)
+      const video = document.createElement('video')
+      video.muted = true
+      video.preload = 'metadata'
+      video.src = url
+      await new Promise((resolve, reject) => {
+        video.onloadedmetadata = resolve
+        video.onerror = () => reject(new Error('无法读取视频元信息'))
+      })
+      const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 3
+      const points = [
+        { seconds: Math.min(0.8, duration * 0.12), label: 'opening' },
+        { seconds: duration * 0.5, label: 'middle' },
+        { seconds: Math.max(duration - 0.8, duration * 0.82), label: 'ending' }
+      ]
+      const frames = []
+      for (const point of points) frames.push(await frameBlob(video, point.seconds, point.label))
+      URL.revokeObjectURL(url)
+      return frames
+    }
+
+    async function uploadFileAsset(file, metadata) {
+      if (!file || !gatewayReady()) return { skipped: true, metadata }
+      return gateway.assets.upload({ file, metadata }, { timeoutMs: 180000 })
+    }
+
+    async function uploadVisualEvidence(file, role) {
+      const uploaded = []
+      if (!file) return uploaded
+      uploaded.push(await uploadFileAsset(file, { source: 'sf_demo_reinvest', role, material_role: role, video_role: role, asset_type: 'original_video' }))
+      const frames = await extractFrames(file)
+      for (const item of frames) {
+        const frameFile = new File([item.blob], `${role}-${item.label}.jpg`, { type: 'image/jpeg' })
+        uploaded.push(await uploadFileAsset(frameFile, {
+          source: 'sf_demo_reinvest',
+          role,
+          material_role: role,
+          asset_type: 'visual_frame',
+          visual_frame: true,
+          frame_time: Number(item.seconds.toFixed(2)),
+          frame_label: item.label,
+          source_file: file.name
+        }))
+      }
+      return uploaded
+    }
+
+    function localConclusion(input) {
+      return {
+        conclusion: '离线预览：素材 B 更适合复投，原因是转化和 ROI 更强；素材 A 适合作为首屏钩子参考。',
+        basis: ['B 的 ROI 和 CVR 更优', 'A 的 CTR 更高但成交效率不足', '下一版建议保留 A 的开场节奏并合并 B 的商品证据'],
+        confidence: 'medium',
+        next_actions: ['复投 B，预算先放大 20%', '剪一版 A 钩子 + B 证据的混剪版', '补采素材前 3 秒完播和加购成本']
+      }
+    }
+
+    async function runAnalysis() {
+      show('开始读取输入...')
+      const input = currentInput()
+      const dataFile = document.getElementById('dataFile').files[0]
+      const videoA = document.getElementById('videoA').files[0]
+      const videoB = document.getElementById('videoB').files[0]
+      if (!gatewayReady()) {
+        show({ mode: 'offline_preview', input, result: localConclusion(input) })
+        return
+      }
+      await gateway.input({ input, metadata: { source: 'sf_demo_reinvest_input' } })
+      append('已记录输入。')
+      await uploadFileAsset(dataFile, { source: 'sf_demo_reinvest', role: 'campaign_data', asset_type: 'data_file' })
+      append('已上传投放数据。')
+      const assetsA = await uploadVisualEvidence(videoA, 'material_a')
+      const assetsB = await uploadVisualEvidence(videoB, 'material_b')
+      append(`视觉证据已上传：A ${assetsA.length} 个，B ${assetsB.length} 个。`)
+      const ai = await gateway.analyze({ request_id: 'sf-demo-reinvest-analyze', input })
+      const output = {
+        summary: '复投判断已生成，详见平台 AI 结论。',
+        ai_result: ai,
+        input,
+        required_sections: ['素材表现判断', '可复投依据', '需改版点', '下一版剪辑动作', '需要补采的数据']
+      }
+      const result = await gateway.ingest({
+        output,
+        reports: [{ title: '短视频素材复投判断 Demo', summary: output.summary, payload: output }],
+        todos: [{ title: '跟进复投素材下一版剪辑', priority: 'high', owner_department: '示例品牌内容电商运营部' }],
+        proofs: [{ source: 'sf_demo_reinvest', role: 'material_a/material_b', evidence: 'original_video + visual_frame fallback metadata uploaded' }]
+      })
+      show({ action: 'completed', analyze: ai, ingest: result })
+    }
+
+    async function boot() {
+      if (gatewayReady()) {
+        ctx = await gateway.ready()
+        gateway.startHeartbeat({ intervalMs: 25000, payload: { page: 'short-video-reinvest-demo' } })
+        modeEl.textContent = 'Project Gateway 已连接'
+        show({ ready: true, project: ctx.project, capabilities: gateway.capabilities(), limits: gateway.limits() })
+      }
+      document.getElementById('analyze').onclick = () => runAnalysis().catch(error => show({ error: String(error && (error.message || error)) }))
+      document.getElementById('clear').onclick = () => show('')
+    }
+
+    boot().catch(error => show({ boot_error: String(error && (error.message || error)) }))
+  </script>
+</body>
+</html>

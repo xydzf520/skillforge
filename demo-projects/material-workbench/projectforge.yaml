@@ -1,0 +1,150 @@
+project_id: samplebrand-material-workbench
+name: 素材工作台
+version: 4.1.0
+kind: internal_tool
+description: 示例品牌内容电商运营部 FDE 素材供给系统；围绕真实需求完成候选生产、技术质检、编导选片、素材入库和真实消耗归因。
+department_id: "931765248"
+department: 示例品牌内容电商运营部
+visibility: department
+entry: web/index.html
+capabilities:
+  - ai.generate
+  - ai.analyze
+  - material.workbench.snapshot
+  - material.request.create
+  - material.request.update
+  - material.request.list
+  - material.request.get
+  - material.request.submit
+  - material.asset.recommend
+  - material.candidate.generate
+  - material.candidate.list
+  - material.candidate.get
+  - material.candidate.manifest
+  - material.candidate.batch_tag
+  - material.candidate.tag.update
+  - material.review.session
+  - material.review.annotation.save
+  - material.decision.submit
+  - material.decision.batch_reject
+  - material.decision.batch_hold
+  - material.delivery.submit
+  - material.delivery.get
+  - material.performance.summary
+  - material.performance.list
+  - material.weekly_report.get
+  - material.review.preference.save
+  - video.create.direct_submit
+  - video.prompt.optimize
+  - video.agent.list
+  - video.agent.get
+  - video.agent.save
+  - video.agent.restore
+  - video.agent.invoke
+  - video.strategy.start
+  - video.strategy.answer
+  - video.strategy.compile
+  - video.strategy.submit
+  - video.replay.analyze
+  - video.replay.update
+  - video.replay.submit
+  - video.replay.get
+  - video.plan_compare
+  - video.job.submit
+  - video.job.batch_submit
+  - video.job.batch_cancel
+  - video.job.list
+  - video.job.get
+  - video.job.cancel
+  - video.job.retry
+  - video.job.clone
+  - video.quality.analyze
+  - video.review
+  - cloud_video.sync
+  - video.workbench.snapshot
+  - video.production.prepare
+  - video.production.compile
+  - video.production.submit
+  - video.first_frame.generate
+  - video.review.list
+  - video.cloud_reference.search
+  - video.cloud_reference.import
+  - video.theme.diverge
+  - video.asset.library.list
+  - video.asset.library.upsert
+  - video.asset.library.archive
+  - video.asset.group.list
+  - video.asset.group.get
+  - video.asset.group.upsert
+  - video.asset.group.archive
+  - video.workflow.list
+  - video.workflow.get
+  - video.workflow.upsert
+  - video.workflow.publish
+  - video.workflow.archive
+  - video.production_batch.create
+  - video.production_batch.list
+  - video.production_batch.get
+  - video.production_batch.update
+  - video.production_batch.cancel
+  - video.continuation.plan
+  - video.continuation.submit
+  - video.continuation.get
+  - video.continuation.cancel
+  - video.continuation.retry_segment
+  - video.review.manifest
+  - video.review.annotation.list
+  - video.review.annotation.save
+  - video.review.annotation.resolve
+  - video.review.batch_reject
+  - video.review.batch_update
+  - video.dialogue_delivery.retry
+  - video.enhance.submit
+outputs:
+  reports: true
+  todos: true
+  proofs: true
+metadata:
+  owner: 祁莹莹
+  surface: material_workbench
+  media_model_family: minimax-h3
+  default_preset: vertical_5s
+  prompt_policy:
+    version: material-fde-h3-v1
+    legacy_exact_policy_version: material-exact-h3-v1
+    legacy_task_policy_version: minimax-h3-context-ir-v60
+    compiler: visible_exact_assembly
+    new_tasks_use_legacy_semantic_compiler: false
+    provider_api_required: false
+    sources:
+      - https://github.com/MiniMax-AI/cli/blob/main/skill/h3-video/references/h3-video.md
+      - https://platform.minimax.io/docs/guides/video-generation
+      - https://platform.minimax.io/docs/api-reference/video-generation-v2-h3-context-ir
+      - https://github.com/MiniMax-AI/skills/tree/main/skills/frontend-dev
+  production_policy:
+    version: material-production-policy-v6
+    decisions: [content_intent, quality_aware_routing, review_repair]
+  ad_material_policy:
+    version: frontdesk-ad-material-v21
+    dialogue_delivery_version: material-dialogue-delivery-v8
+    source: 前台短视频工作表
+  ai_gateway:
+    model_profile: deepseek-v4-flash
+    optimization_optional: true
+    default_planning_mode: operator_brief
+    source_understanding_profile: vision
+    source_understanding_policy: material-source-understanding-v3
+  agents:
+    model_profile: deepseek-v4-flash
+    scope: user_project
+    items: [video_prompt_h3, video_replay_h3]
+  workload:
+    role: video_generation
+    department_priority: 200
+  learning_loop:
+    enabled: true
+    managed_training: true
+    candidate_source: media_workbench_learning_loop
+    minimum_training_samples: 300
+    evaluation_holdout_percent: 20
+    rollout_percentages: [10, 25, 50, 100]

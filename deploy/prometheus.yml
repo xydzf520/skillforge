@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 1m
+
+rule_files:
+  - /etc/prometheus/prometheus.tasktree.rules.yml
+  - /etc/prometheus/prometheus.decision-log.rules.yml
+
+scrape_configs:
+  - job_name: skillforge
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - host.docker.internal:8000
+
+  # postgres_exporter（可选）：用于采集 skillforge_decision_log_rows 等 DB 指标。
+  # 启用前需在 docker-compose.monitoring.yml 补一个 postgres_exporter 服务，并设置
+  # DATA_SOURCE_NAME 指向 skillforge 的 Postgres。暂未启用时，保留该 job 处于 commented 状态。
+  # - job_name: postgres
+  #   static_configs:
+  #     - targets:
+  #         - postgres_exporter:9187

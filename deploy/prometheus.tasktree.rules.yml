@@ -1,0 +1,168 @@
+groups:
+  - name: tasktree.rules
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # 延迟类（阈值调整：缓存命中后实际 p95 < 10ms，收紧到 30ms）
+      # ---------------------------------------------------------------
+      - alert: TaskTreeHighLatencyP95
+        expr: histogram_quantile(0.95, sum(rate(tasktree_request_duration_seconds_bucket[15m])) by (le, endpoint)) > 0.03
+        for: 15m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree P95 latency 超过 30ms"
+          description: "Endpoint {{ $labels.endpoint }} p95 延迟持续 15m 高于 30ms，检查缓存命中率与 DB 负载。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#tasktree-high-latency-p95"
+
+      - alert: TaskTreeGetTreeP99Slow
+        expr: histogram_quantile(0.99, sum(rate(tasktree_get_tree_p99_seconds_bucket[5m])) by (le)) > 0.15
+        for: 10m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "get_task_tree P99 超过 150ms"
+          description: "get_task_tree P99 延迟持续 10m 高于 150ms，可能是 task_nodes_light 索引失效或大树访问。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#tasktree-get-tree-p99-slow"
+
+      # ---------------------------------------------------------------
+      # 缓存命中率（阈值调整：70% → 85%）
+      # ---------------------------------------------------------------
+      - alert: TaskTreeLowCacheHitRate
+        expr: (sum(rate(tasktree_cache_hits_total[30m])) / (sum(rate(tasktree_cache_hits_total[30m])) + sum(rate(tasktree_cache_misses_total[30m])))) < 0.85
+        for: 30m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree 缓存命中率低于 85%"
+          description: "TaskTree 缓存命中率持续 30m 低于 85%，检查是否有大量写入触发 invalidate、或 TTL 配置过短。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#tasktree-low-cache-hit-rate"
+
+      # ---------------------------------------------------------------
+      # Active roots（按 department label 评估）
+      # ---------------------------------------------------------------
+      - alert: TaskTreeTooManyActiveRoots
+        expr: tasktree_active_roots > 20
+        for: 5m
+        labels:
+          severity: warning
+          component: tasktree
+          department: "{{ $labels.department }}"
+        annotations:
+          summary: "部门 {{ $labels.department }} active roots 超过 20"
+          description: "部门 {{ $labels.department }} 活跃根节点数持续 5m 超过 20，可能是任务清理未及时或异常拉起。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#tasktree-too-many-active-roots"
+
+      # ---------------------------------------------------------------
+      # Writer / 补偿队列（基于 Group A/B 的新指标）
+      # ---------------------------------------------------------------
+      - alert: TaskTreeWriterFailureRate
+        expr: sum(rate(tasktree_writer_failure_total[5m])) by (source) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree writer 失败率超 10% (source={{ $labels.source }})"
+          description: "tasktree_writer_failure_total 来源 {{ $labels.source }} 在 5m 内失败率 > 0.1/s 持续 10m，检查 DB 连接或双写补偿。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#writer-failures"
+
+      - alert: TaskTreeRepairQueueStuckWarn
+        expr: tasktree_repair_queue_size > 100
+        for: 10m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree 补偿队列积压 > 100"
+          description: "tasktree_repair_queue_size 持续 10m 超过 100，检查 repair worker 是否存活。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#repair-queue-stuck"
+
+      - alert: TaskTreeRepairQueueStuckCritical
+        expr: tasktree_repair_queue_size > 500
+        for: 5m
+        labels:
+          severity: critical
+          component: tasktree
+        annotations:
+          summary: "TaskTree 补偿队列积压 > 500 (critical)"
+          description: "tasktree_repair_queue_size 持续 5m 超过 500，writer 已严重积压，需要立即介入。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#repair-queue-stuck"
+
+      - alert: TaskTreeRepairLagHigh
+        expr: tasktree_repair_lag_seconds > 300
+        for: 10m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree 补偿延迟 > 5 分钟"
+          description: "tasktree_repair_lag_seconds 持续 10m 超过 300 秒，意味着最旧未处理记录已超过 5 分钟。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#repair-queue-stuck"
+
+      # ---------------------------------------------------------------
+      # 一致性 / 节点状态
+      # ---------------------------------------------------------------
+      - alert: TaskTreeDriftDetected
+        expr: tasktree_drift_count > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree drift > 10"
+          description: "task_nodes_light 与 execution_runs 不一致记录数持续 5m 高于 10，检查双写与对账。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#drift-detected"
+
+      - alert: TaskTreeNodeStateErrors
+        expr: increase(tasktree_node_state_errors_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+          component: tasktree
+        annotations:
+          summary: "TaskTree 节点状态不一致"
+          description: "tasktree_node_state_errors_total 在 5 分钟内新增事件。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#node-state-errors"
+
+      # ---------------------------------------------------------------
+      # AI 诊断
+      # ---------------------------------------------------------------
+      - alert: AIDiagnoseDegradedWarn
+        expr: ai_diagnose_failure_rate > 0.3
+        for: 15m
+        labels:
+          severity: warning
+          component: tasktree-ai
+        annotations:
+          summary: "AI 诊断失败率 > 30%"
+          description: "ai_diagnose_failure_rate 持续 15m 高于 0.3，检查 LiteLLM 连通性或模型额度。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#ai-diagnose-degraded"
+
+      - alert: AIDiagnoseDegradedCritical
+        expr: ai_diagnose_failure_rate > 0.6
+        for: 5m
+        labels:
+          severity: critical
+          component: tasktree-ai
+        annotations:
+          summary: "AI 诊断失败率 > 60% (critical)"
+          description: "ai_diagnose_failure_rate 持续 5m 高于 0.6，AI 诊断近乎不可用，可能已触发降级开关。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#ai-diagnose-degraded"
+
+      # ---------------------------------------------------------------
+      # 慢查询突发
+      # ---------------------------------------------------------------
+      - alert: TaskTreeSlowQueryBurst
+        expr: sum(rate(tasktree_slow_query_total[5m])) by (operation) > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: tasktree
+        annotations:
+          summary: "TaskTree 慢查询突发 (operation={{ $labels.operation }})"
+          description: "operation={{ $labels.operation }} 慢查询速率持续 5m 超过 1 次/s，检查索引与查询计划。"
+          runbook: "docs/plans/2026-04-14-tasktree-runbook.md#slow-query-burst"

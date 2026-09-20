@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 使用说明 / Documentation
+    url: https://github.com/xydzf520/skillforge/blob/main/README.md
+    about: 先核对配置、能力范围与已知限制 / Check setup and known limitations
+  - name: 安全报告 / Security reporting
+    url: https://github.com/xydzf520/skillforge/security/policy
+    about: 请按安全政策私下报告 / Follow the policy for private reporting

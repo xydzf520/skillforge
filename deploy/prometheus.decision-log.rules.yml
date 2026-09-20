@@ -1,0 +1,38 @@
+groups:
+  - name: decision-log.rules
+    interval: 5m
+    rules:
+      # ---------------------------------------------------------------
+      # decision_log 行数监控（Strategy-2）
+      #
+      # 指标 skillforge_decision_log_rows 需要以下任一来源：
+      #   1) postgres_exporter 的 pg_stat_user_tables_n_live_tup{relname="decision_log"}，
+      #      再通过 recording rule 重命名为 skillforge_decision_log_rows
+      #   2) 应用侧每 N 分钟 SELECT reltuples FROM pg_class WHERE relname='decision_log'
+      #      暴露为 skillforge_decision_log_rows Gauge
+      #   3) 运维手工采样脚本（cron + textfile_collector）
+      #
+      # 如果 3 种来源都不可用，此规则组不会触发（指标缺失），不会产生误告警，
+      # 但应通过 Task #11 Strategy-2 track 推动任一实施。
+      # ---------------------------------------------------------------
+      - alert: DecisionLogRowsWarn
+        expr: skillforge_decision_log_rows > 5000000
+        for: 30m
+        labels:
+          severity: warning
+          component: decision-log
+        annotations:
+          summary: "decision_log 行数超过 500 万 (warn)"
+          description: "decision_log 当前行数 {{ $value }}，已达到 Strategy-2 预警阈值。请评估分区/归档时机。"
+          runbook: "docs/plans/2026-04-14-decision-log-partition-runbook.md"
+
+      - alert: DecisionLogRowsCritical
+        expr: skillforge_decision_log_rows > 10000000
+        for: 30m
+        labels:
+          severity: critical
+          component: decision-log
+        annotations:
+          summary: "decision_log 行数超过 1000 万 (critical)"
+          description: "decision_log 当前行数 {{ $value }}，已达到 Strategy-2 必须分区阈值。请在 48h 内启动按月 RANGE PARTITION 迁移。"
+          runbook: "docs/plans/2026-04-14-decision-log-partition-runbook.md"

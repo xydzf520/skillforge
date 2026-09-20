@@ -1,0 +1,774 @@
+/* SkillForge 全局样式 — Design System v0.5 */
+
+/* ══════════════════════════════════════════
+   设计变量（Design Tokens）
+   ══════════════════════════════════════════ */
+:root {
+  --sf-ink-1: #162033;
+  --sf-ink-2: #374151;
+  --sf-ink-3: #5b6476;
+  --sf-paper: #f5f1e8;
+  --sf-surface: #fffdf8;
+  --sf-panel: #f0e8d8;
+  --sf-line: rgba(22, 32, 51, 0.12);
+  --sf-accent-blue: #165dff;
+  --sf-accent-amber: #c66a14;
+  --sf-accent-green: #0f8f6f;
+  --sf-accent-red: #bf3f3f;
+  /* 圆角 */
+  --sf-radius-xs: 4px;
+  --sf-radius-sm: 6px;
+  --sf-radius-md: 10px;
+  --sf-radius-lg: 14px;
+
+  /* 覆盖 Arco 全局圆角 */
+  --border-radius-small: var(--sf-radius-xs);
+  --border-radius-medium: var(--sf-radius-sm);
+  --border-radius-large: var(--sf-radius-md);
+
+  /* 阴影 */
+  --sf-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --sf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --sf-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.09);
+
+  /* 品牌 */
+  --sf-gradient-primary: linear-gradient(135deg, #165DFF, #306FFF);
+
+  /* AI 渐变彩色 — 用于所有 AI 功能入口 */
+  --sf-gradient-ai: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef, #f43f5e);
+  --sf-gradient-ai-soft: linear-gradient(135deg, rgba(99,102,241,.12), rgba(139,92,246,.12), rgba(217,70,239,.12));
+  --sf-gradient-ai-border: linear-gradient(135deg, #6366f1, #d946ef);
+  --sf-gradient-ai-text: linear-gradient(135deg, #6366f1, #8b5cf6, #d946ef);
+
+  /* 字体：全部交给操作系统默认，不再指定具体字体名 */
+  --sf-font-sans: system-ui, sans-serif;
+  --sf-font-mono: ui-monospace, monospace;
+
+  /* 字号 Type Scale（6 级） */
+  --sf-text-h1: 20px;
+  --sf-text-h2: 15px;
+  --sf-text-body: 13px;
+  --sf-text-caption: 12px;
+  --sf-text-tiny: 11px;
+
+  /* 动效 */
+  --sf-transition: 0.15s ease;
+}
+
+/* 暗色模式 */
+body[arco-theme='dark'] {
+  --border-radius-small: var(--sf-radius-xs);
+  --border-radius-medium: var(--sf-radius-sm);
+  --border-radius-large: var(--sf-radius-md);
+  --sf-shadow-sm: none;
+  --sf-shadow-md: none;
+  --sf-shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+body[arco-theme='dark'] .arco-card {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: none !important;
+}
+body[arco-theme='dark'] .top-bar {
+  background: var(--color-bg-3) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 登录 / 修改密码 / 错误页 —— 暗色适配 */
+body[arco-theme='dark'] .auth-shell {
+  background: var(--ai-bg);
+}
+body[arco-theme='dark'] .auth-panel {
+  background: var(--ai-surface);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+body[arco-theme='dark'] .auth-brand-panel {
+  background:
+    radial-gradient(circle at top right, rgba(22, 93, 255, 0.2), transparent 32%),
+    linear-gradient(180deg, rgba(32, 40, 60, 0.96), rgba(24, 30, 46, 0.98));
+}
+body[arco-theme='dark'] .auth-brand-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #b7bfce;
+}
+body[arco-theme='dark'] .auth-brand-title,
+body[arco-theme='dark'] .login-title,
+body[arco-theme='dark'] .auth-highlight-item strong {
+  color: var(--ai-ink-1);
+}
+body[arco-theme='dark'] .auth-brand-desc,
+body[arco-theme='dark'] .auth-highlight-item span {
+  color: #b7bfce;
+}
+body[arco-theme='dark'] .auth-highlight-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+body[arco-theme='dark'] .auth-footer-version {
+  color: var(--ai-ink-4);
+}
+body[arco-theme='dark'] .auth-form-panel .arco-input-wrapper,
+body[arco-theme='dark'] .auth-single .arco-input-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+body[arco-theme='dark'] .auth-form-panel .arco-input-wrapper:hover,
+body[arco-theme='dark'] .auth-single .arco-input-wrapper:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+body[arco-theme='dark'] .auth-form-panel .arco-input-wrapper.arco-input-focus,
+body[arco-theme='dark'] .auth-single .arco-input-wrapper.arco-input-focus {
+  border-color: rgb(var(--primary-6));
+  background: rgba(255, 255, 255, 0.06);
+}
+body[arco-theme='dark'] .auth-form-panel .arco-input,
+body[arco-theme='dark'] .auth-form-panel .arco-input-password,
+body[arco-theme='dark'] .auth-single .arco-input,
+body[arco-theme='dark'] .auth-single .arco-input-password {
+  color: #e6ebf2;
+}
+
+/* ══════════════════════════════════════════
+   字体 & 排版
+   ══════════════════════════════════════════ */
+body {
+  margin: 0;
+  font-family: var(--sf-font-sans);
+  font-size: var(--sf-text-body);
+  line-height: 1.6;
+  color: var(--sf-ink-1);
+  background:
+    radial-gradient(circle at top left, rgba(198, 106, 20, 0.1), transparent 28%),
+    radial-gradient(circle at top right, rgba(22, 93, 255, 0.08), transparent 32%),
+    linear-gradient(180deg, #f8f4ec 0%, #f2ebdf 100%);
+}
+
+/* Typography classes */
+.text-h1 { font-size: var(--sf-text-h1); font-weight: 700; line-height: 28px; }
+.text-h2 { font-size: var(--sf-text-h2); font-weight: 600; line-height: 22px; }
+.text-body { font-size: var(--sf-text-body); font-weight: 400; line-height: 20px; }
+.text-caption { font-size: var(--sf-text-caption); font-weight: 400; line-height: 18px; color: var(--color-text-3); }
+.text-tiny { font-size: var(--sf-text-tiny); font-weight: 400; line-height: 16px; color: var(--color-text-4); }
+.text-code { font-size: var(--sf-text-caption); font-family: var(--sf-font-mono); line-height: 18px; }
+
+/* v2.0.18 L3：代码块 / 等宽场景强制用 mono stack，不被父级 --sf-font-sans 覆盖 */
+pre,
+code,
+kbd,
+samp,
+.code-block,
+.arco-code,
+.json-preview {
+  font-family: var(--sf-font-mono) !important;
+}
+
+/* ══════════════════════════════════════════
+   页面布局
+   ══════════════════════════════════════════ */
+.page-container {
+  padding: 20px 24px;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 特殊：驾驶舱 / 全宽画布可以用 .page-wide 覆盖；详情/表单可以用 .page-narrow 收窄 */
+.page-container.page-wide { max-width: none; }
+.page-container.page-narrow { max-width: 960px; }
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.page-title {
+  font-size: var(--sf-text-h1);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--sf-ink-1);
+  margin: 0;
+}
+
+.page-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: var(--sf-ink-2);
+  font-weight: 600;
+}
+
+.stats-row {
+  margin-bottom: 20px;
+}
+
+/* ══════════════════════════════════════════
+   卡片
+   ══════════════════════════════════════════ */
+.arco-card {
+  border-radius: var(--sf-radius-md) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,250,242,0.98)) !important;
+  box-shadow: 0 10px 30px rgba(61, 46, 28, 0.08) !important;
+  border: 1px solid rgba(22, 32, 51, 0.1) !important;
+  transition: box-shadow var(--sf-transition), transform var(--sf-transition) !important;
+}
+.arco-card + .arco-card {
+  margin-top: 16px;
+}
+.arco-card:hover {
+  box-shadow: 0 14px 36px rgba(61, 46, 28, 0.14) !important;
+}
+
+/* 弹窗 */
+.arco-modal {
+  border-radius: var(--sf-radius-lg) !important;
+}
+
+/* ══════════════════════════════════════════
+   按钮 / 标签
+   ══════════════════════════════════════════ */
+.arco-btn {
+  border-radius: var(--sf-radius-sm) !important;
+}
+.arco-tag {
+  border-radius: var(--sf-radius-sm) !important;
+}
+
+/* ══════════════════════════════════════════
+   表格
+   ══════════════════════════════════════════ */
+.arco-table-th {
+  font-weight: 800 !important;
+  font-size: var(--sf-text-body) !important;
+  padding: 10px 16px !important;
+  color: var(--sf-ink-1) !important;
+  background: rgba(22, 32, 51, 0.04) !important;
+  white-space: nowrap;
+}
+.arco-table-td {
+  padding: 10px 16px !important;
+  color: var(--sf-ink-2) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* 需要多行或软换行的单元格加 .cell-wrap */
+.arco-table-td.cell-wrap,
+.arco-table-td .cell-wrap {
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: clip;
+}
+.arco-table-container {
+  border-radius: var(--sf-radius-sm) !important;
+  overflow: hidden;
+}
+
+/* 表格撑满卡片宽度，但允许内容超宽时横向滚动（避免列被挤压导致单字换行） */
+.arco-spin:has(.arco-table),
+.arco-table {
+  display: block !important;
+  width: 100% !important;
+}
+.arco-table-content-scroll,
+.arco-table-content {
+  overflow-x: auto !important;
+}
+table.arco-table-element {
+  width: 100%;
+  min-width: max-content;
+}
+
+/* ══════════════════════════════════════════
+   消息 / 通知
+   ══════════════════════════════════════════ */
+.arco-message .arco-message-content,
+.arco-notification {
+  border-radius: var(--sf-radius-md) !important;
+}
+
+/* ══════════════════════════════════════════
+   分段按钮组
+   ══════════════════════════════════════════ */
+.arco-radio-group-button {
+  border-radius: var(--sf-radius-sm) !important;
+}
+.arco-radio-group-button .arco-radio:first-child .arco-radio-button {
+  border-radius: var(--sf-radius-sm) 0 0 var(--sf-radius-sm) !important;
+}
+.arco-radio-group-button .arco-radio:last-child .arco-radio-button {
+  border-radius: 0 var(--sf-radius-sm) var(--sf-radius-sm) 0 !important;
+}
+
+/* ══════════════════════════════════════════
+   描述列表
+   ══════════════════════════════════════════ */
+.arco-descriptions-table {
+  border-radius: var(--sf-radius-sm) !important;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════
+   统计卡片（紧凑化）
+   ══════════════════════════════════════════ */
+.stat-card {
+  border-radius: var(--sf-radius-md) !important;
+}
+.stat-card .arco-card-body {
+  padding: 14px 16px !important;
+}
+.stat-card .arco-statistic-value {
+  font-size: 28px !important;
+  font-weight: 800 !important;
+  color: var(--sf-ink-1) !important;
+}
+.stat-card .arco-statistic-title {
+  font-size: var(--sf-text-caption) !important;
+  color: var(--sf-ink-3) !important;
+  font-weight: 700 !important;
+}
+
+/* ══════════════════════════════════════════
+   状态徽章
+   ══════════════════════════════════════════ */
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--sf-radius-sm);
+  font-size: var(--sf-text-caption);
+  font-weight: 500;
+}
+.status-draft { background: var(--color-fill-2); color: var(--color-text-3); }
+.status-shadow { background: rgb(var(--primary-1)); color: rgb(var(--primary-6)); }
+.status-active { background: var(--color-success-light-1); color: rgb(var(--green-6)); }
+.status-deprecated { background: var(--color-danger-light-1); color: rgb(var(--red-6)); }
+
+/* ══════════════════════════════════════════
+   筛选栏
+   ══════════════════════════════════════════ */
+.filter-bar {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(22, 32, 51, 0.04);
+  border: 1px solid rgba(22, 32, 51, 0.06);
+}
+
+.page-list-card {
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(198, 160, 100, 0.12) !important;
+}
+
+.page-list-card .arco-card-body {
+  padding: 18px !important;
+  overflow-x: auto;
+}
+
+.page-list-table {
+  min-width: 0;
+}
+
+.page-list-table .arco-table-th {
+  background: rgba(22, 32, 51, 0.05) !important;
+}
+
+.page-list-table .arco-link {
+  font-weight: 800;
+  color: var(--sf-ink-1);
+}
+
+.page-list-table .arco-btn-text {
+  font-weight: 700;
+}
+
+.page-detail-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.page-detail-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(22, 32, 51, 0.08);
+  box-shadow: 0 10px 24px rgba(22, 32, 51, 0.06);
+}
+
+.page-detail-meta {
+  color: var(--sf-ink-3);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.page-section-card {
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(198, 160, 100, 0.12) !important;
+}
+
+.page-section-card .arco-card-head-title {
+  font-weight: 800 !important;
+  color: var(--sf-ink-1) !important;
+}
+
+.page-muted {
+  color: var(--sf-ink-3);
+  font-weight: 600;
+}
+
+.page-kicker {
+  margin: 0 0 4px;
+  color: var(--sf-accent-amber);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.page-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(22, 32, 51, 0.05);
+  border: 1px solid rgba(22, 32, 51, 0.08);
+  color: var(--sf-ink-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.page-chip.is-info {
+  background: rgba(22, 93, 255, 0.08);
+  border-color: rgba(22, 93, 255, 0.14);
+}
+
+.page-chip.is-success {
+  background: rgba(15, 143, 111, 0.08);
+  border-color: rgba(15, 143, 111, 0.14);
+}
+
+.page-chip.is-warning {
+  background: rgba(198, 106, 20, 0.1);
+  border-color: rgba(198, 106, 20, 0.16);
+}
+
+.page-chip.is-danger {
+  background: rgba(191, 63, 63, 0.08);
+  border-color: rgba(191, 63, 63, 0.14);
+}
+
+.auth-shell {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ai-bg);
+  font-family: var(--ai-font-sans);
+}
+
+.auth-grid {
+  width: min(1080px, 100%);
+  display: grid;
+  grid-template-columns: minmax(320px, 1.15fr) minmax(360px, 0.85fr);
+  gap: 18px;
+}
+
+.auth-panel {
+  box-sizing: border-box;
+  border-radius: var(--ai-radius-l);
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  box-shadow: var(--ai-shadow-2);
+}
+
+.auth-brand-panel,
+.auth-form-panel,
+.error-panel {
+  padding: 32px;
+}
+
+.auth-brand-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--ai-surface);
+}
+
+.auth-brand-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0 7px;
+  height: 20px;
+  align-items: center;
+  border-radius: 4px;
+  background: var(--ai-surface-2);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-ink-2);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.auth-brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--ai-ink-1);
+  color: var(--ai-surface);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 600;
+  font-family: var(--ai-font-sans);
+  box-shadow: none;
+}
+
+.auth-brand-title {
+  margin: 0;
+  color: var(--ai-ink-1);
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  font-family: var(--ai-font-sans);
+}
+
+.auth-brand-desc {
+  margin: 0;
+  color: var(--sf-ink-2);
+  font-size: 14px;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.auth-highlight-list {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-highlight-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(22, 32, 51, 0.08);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.auth-highlight-item strong {
+  color: var(--sf-ink-1);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.auth-highlight-item span {
+  color: var(--sf-ink-2);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.auth-form-head {
+  margin-bottom: 24px;
+}
+
+.auth-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.auth-footer-version {
+  color: var(--sf-ink-3);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.error-layout {
+  grid-template-columns: minmax(300px, 0.9fr) minmax(420px, 1.1fr);
+}
+
+.error-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════
+   响应式适配
+   ══════════════════════════════════════════ */
+
+/* 平板（<1024px）*/
+@media (max-width: 1024px) {
+  .page-container { padding: 16px; }
+  /* 卡片网格改两列���匹配 Arco 的 arco-col-6 类名 */
+  .arco-col-6 { flex: 0 0 50% !important; max-width: 50% !important; }
+  .auth-grid,
+  .error-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 手机（<768px）*/
+@media (max-width: 768px) {
+  .page-container { padding: 12px; }
+  .page-header { flex-wrap: wrap; gap: 8px; }
+  .page-title { font-size: 18px; }
+  .page-chip-row { gap: 8px; }
+  .auth-shell { padding: 14px; }
+  .auth-brand-panel,
+  .auth-form-panel,
+  .error-panel { padding: 24px; }
+  .auth-brand-title { font-size: 24px; }
+  .auth-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  /* 顶栏导航隐藏，由汉堡菜单替代 */
+  .topbar-nav { display: none !important; }
+  .mobile-menu-btn { display: flex !important; }
+
+  /* 卡片网格改单列 */
+  .arco-col-6,
+  .arco-col-8 { flex: 0 0 100% !important; max-width: 100% !important; }
+
+  /* 统计卡片两列 */
+  .stats-row .arco-col { flex: 0 0 50% !important; max-width: 50% !important; }
+
+  /* 表格横向可滚 */
+  .arco-table-content { overflow-x: auto !important; }
+
+  /* 弹窗全屏 */
+  .arco-modal { width: 95vw !important; max-width: 95vw !important; }
+
+  /* 筛选栏竖排 */
+  .filter-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+  .filter-bar .arco-space { flex-wrap: wrap; }
+}
+
+/* ══════════════════════════════════════════
+   AI 渐变彩色样式（全局复用）
+   ══════════════════════════════════════════ */
+
+/* AI 渐变文字 */
+.ai-gradient-text {
+  background: var(--sf-gradient-ai);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+/* 【REMOVED】legacy AI 渐变按钮 .ai-btn / .ai-btn-outline 与设计稿 .ai-btn 命名冲突。
+ * 设计稿 (ai-tokens.css) 的 .ai-btn 是 flat ink-1 主色，本文件之前的 !important 渐变会盖掉。
+ * 如果某个 chat panel 需要 AI 风格的彩色按钮，请用新类 .ai-gradient-btn / .ai-gradient-btn-outline。 */
+.ai-gradient-btn {
+  position: relative;
+  background: var(--sf-gradient-ai);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  transition: all .15s;
+}
+.ai-gradient-btn:hover {
+  opacity: .9;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, .3);
+}
+
+.ai-gradient-btn-outline {
+  position: relative;
+  background: var(--sf-gradient-ai-soft);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  color: #8b5cf6;
+  font-weight: 500;
+}
+.ai-gradient-btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--sf-gradient-ai-border);
+  z-index: -1;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 1px;
+}
+.ai-gradient-btn-outline:hover {
+  box-shadow: 0 2px 10px rgba(139, 92, 246, .2);
+}
+
+/* AI 渐变输入框（聊天输入区） */
+.ai-input-glow {
+  position: relative;
+}
+.ai-input-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: var(--sf-gradient-ai);
+  opacity: .15;
+  z-index: 0;
+  transition: opacity .2s;
+}
+.ai-input-glow:focus-within::before {
+  opacity: .3;
+}
+
+/* AI 标签 */
+.ai-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--sf-gradient-ai-soft);
+  font-size: 10px;
+  font-weight: 600;
+}
+.ai-tag > span {
+  background: var(--sf-gradient-ai);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* AI 渐变发送按钮 */
+.ai-send-btn {
+  background: var(--sf-gradient-ai) !important;
+  border: none !important;
+  color: #fff !important;
+}
+.ai-send-btn:disabled {
+  opacity: .4 !important;
+  background: var(--color-fill-3) !important;
+  color: var(--color-text-4) !important;
+}

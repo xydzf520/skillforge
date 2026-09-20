@@ -1,0 +1,13 @@
+project_id: example_org_data_search
+name: 组织数据查询示例
+version: 1.0.0
+kind: web_static
+description: 一个部门组织数据查询小网页；通过 Project Gateway 调用平台只读 MCP 数据能力，并把查询输入、结果和证据链记录进项目运行。
+department: AI小组
+visibility: department
+entry: web/index.html
+capabilities:
+  - mcp://skillforge_org_search_users
+outputs:
+  reports: true
+  proofs: true

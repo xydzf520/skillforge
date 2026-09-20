@@ -1,0 +1,106 @@
+/**
+ * SkillForge 语义 tone 样式
+ *
+ * 与 utils/tone.ts 的 Tone 一一对应。每个 .sf-tone-{name} 暴露 3 个 CSS 变量：
+ *   --sf-tone-fg     文本 / icon 主色
+ *   --sf-tone-bg     背景（浅，用于 chip / badge）
+ *   --sf-tone-border 边框（中等强度）
+ *
+ * 调用方只要加上 `.sf-tone-success` 类，就能在类内部用 `color: var(--sf-tone-fg)` 等生效，
+ * 避免每个组件硬编码 rgba(var(--red-6), 0.08) 这种魔法值。
+ *
+ * 与 Arco CSS token 保持"软依赖"：我们沿用 Arco 暴露的 --{palette}-6，确保跟主题切换。
+ */
+
+/*
+ * 注：这里挂在 body 而不是 :root。原因：Arco 的色板变量（如 --red-6）定义在
+ * body 选择器上，而不是 :root。若放 :root，rgb(var(--red-6)) 无法解析（红
+ * 色值对 :root 不可见），导致所有 tone class 的 --sf-tone-*-fg 计算为空，
+ * 进而 SfTagChip / SfStatChip / SfKpiCard 等组件的 tone 颜色完全不显示。
+ */
+body {
+  /* ── 基础语义 tone ── */
+  /* danger：失败 / 离线 / 已驳回 */
+  --sf-tone-danger-fg: rgb(var(--red-6));
+  --sf-tone-danger-bg: rgba(var(--red-6), 0.08);
+  --sf-tone-danger-border: rgba(var(--red-6), 0.24);
+
+  /* warning：逾期 / 卡住 / 待审批 */
+  --sf-tone-warning-fg: rgb(var(--orange-6));
+  --sf-tone-warning-bg: rgba(var(--orange-6), 0.1);
+  --sf-tone-warning-border: rgba(var(--orange-6), 0.28);
+
+  /* success：成功 / 在线 / 已通过 */
+  --sf-tone-success-fg: rgb(var(--green-6));
+  --sf-tone-success-bg: rgba(var(--green-6), 0.08);
+  --sf-tone-success-border: rgba(var(--green-6), 0.24);
+
+  /* info：运行中 / 工程师 / 品牌蓝 */
+  --sf-tone-info-fg: rgb(var(--arcoblue-6));
+  --sf-tone-info-bg: rgba(var(--arcoblue-6), 0.08);
+  --sf-tone-info-border: rgba(var(--arcoblue-6), 0.24);
+
+  /* brand：AI / 会签 / 紫色强调（落到 purple 调色板） */
+  --sf-tone-brand-fg: rgb(var(--purple-6));
+  --sf-tone-brand-bg: rgba(var(--purple-6), 0.1);
+  --sf-tone-brand-border: rgba(var(--purple-6), 0.26);
+
+  /* neutral：默认 / 停用 / 观察员 */
+  --sf-tone-neutral-fg: var(--sf-ink-3);
+  --sf-tone-neutral-bg: rgba(22, 32, 51, 0.06);
+  --sf-tone-neutral-border: rgba(22, 32, 51, 0.12);
+}
+
+/* 暗色模式微调：弱化背景，让高对比度的 fg 留住可读性 */
+body[arco-theme='dark'] {
+  --sf-tone-danger-bg: rgba(var(--red-6), 0.16);
+  --sf-tone-warning-bg: rgba(var(--orange-6), 0.18);
+  --sf-tone-success-bg: rgba(var(--green-6), 0.16);
+  --sf-tone-info-bg: rgba(var(--arcoblue-6), 0.16);
+  --sf-tone-brand-bg: rgba(var(--purple-6), 0.18);
+  --sf-tone-neutral-fg: #b7bfce;
+  --sf-tone-neutral-bg: rgba(255, 255, 255, 0.06);
+  --sf-tone-neutral-border: rgba(255, 255, 255, 0.12);
+}
+
+/* ── tone class：每个 class 把对应 tone 的三个值暴露为通用 --sf-tone-* ── */
+/* 使用方式：
+ *   <span class="sf-tone-success" style="color: var(--sf-tone-fg); background: var(--sf-tone-bg)">...</span>
+ * 或者组件内部：
+ *   .my-chip.sf-tone-danger { color: var(--sf-tone-fg); ... }
+ */
+.sf-tone-danger {
+  --sf-tone-fg: var(--sf-tone-danger-fg);
+  --sf-tone-bg: var(--sf-tone-danger-bg);
+  --sf-tone-border: var(--sf-tone-danger-border);
+}
+
+.sf-tone-warning {
+  --sf-tone-fg: var(--sf-tone-warning-fg);
+  --sf-tone-bg: var(--sf-tone-warning-bg);
+  --sf-tone-border: var(--sf-tone-warning-border);
+}
+
+.sf-tone-success {
+  --sf-tone-fg: var(--sf-tone-success-fg);
+  --sf-tone-bg: var(--sf-tone-success-bg);
+  --sf-tone-border: var(--sf-tone-success-border);
+}
+
+.sf-tone-info {
+  --sf-tone-fg: var(--sf-tone-info-fg);
+  --sf-tone-bg: var(--sf-tone-info-bg);
+  --sf-tone-border: var(--sf-tone-info-border);
+}
+
+.sf-tone-brand {
+  --sf-tone-fg: var(--sf-tone-brand-fg);
+  --sf-tone-bg: var(--sf-tone-brand-bg);
+  --sf-tone-border: var(--sf-tone-brand-border);
+}
+
+.sf-tone-neutral {
+  --sf-tone-fg: var(--sf-tone-neutral-fg);
+  --sf-tone-bg: var(--sf-tone-neutral-bg);
+  --sf-tone-border: var(--sf-tone-neutral-border);
+}

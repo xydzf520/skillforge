@@ -1,0 +1,1 @@
+"""Department analysis Agent blueprints."""

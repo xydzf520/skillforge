@@ -1,0 +1,20 @@
+project_id: demo-short-video-reinvest-analysis
+name: 短视频素材复投判断 Demo
+version: 1.0.0
+kind: web_static
+description: 使用 sf project spec short-video-analysis 标准生成的复投判断项目，支持投放数据、素材 A/B、原视频资产和关键帧兜底。
+department_id: "931765248"
+department: 示例品牌内容电商运营部
+visibility: company
+entry: web/index.html
+capabilities:
+  - ai.generate
+  - ai.analyze
+outputs:
+  reports: true
+  todos: true
+  proofs: true
+metadata:
+  owner: 祁莹莹
+  source: sf_project_spec_short_video_analysis
+  demo: reinvest_analysis

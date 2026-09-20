@@ -1,0 +1,11 @@
+{
+  "name": "skillforge-browser-deploy",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "./node_modules/.bin/tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

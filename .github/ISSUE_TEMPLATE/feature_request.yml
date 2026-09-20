@@ -1,0 +1,22 @@
+name: 功能建议 / Feature request
+description: 说明业务问题、受益者与验收方式 / Propose a use case
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 业务问题和使用者 / Problem and users
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案与替代做法 / Proposal and alternatives
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 如何验证价值 / Acceptance criteria
+      description: 明确可观察的结果、依赖与限制；不需要提交企业数据。
+    validations:
+      required: true

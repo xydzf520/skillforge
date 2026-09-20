@@ -1,0 +1,20 @@
+project_id: demo-short-video-edit-review
+name: 内容电商剪辑复盘 Demo
+version: 1.0.0
+kind: web_static
+description: 使用 sf project spec short-video-analysis 标准生成的内容电商剪辑复盘项目，支持素材 A/B 对比、关键帧兜底和下一版剪辑动作。
+department_id: "931765248"
+department: 示例品牌内容电商运营部
+visibility: company
+entry: web/index.html
+capabilities:
+  - ai.generate
+  - ai.analyze
+outputs:
+  reports: true
+  todos: true
+  proofs: true
+metadata:
+  owner: 祁莹莹
+  source: sf_project_spec_short_video_analysis
+  demo: edit_review

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SlackPayload",
+  "type": "object",
+  "required": ["title", "blocks"],
+  "properties": {
+    "title": { "type": "string" },
+    "blocks": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

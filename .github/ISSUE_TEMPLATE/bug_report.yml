@@ -1,0 +1,37 @@
+name: 问题反馈 / Bug report
+description: 提供合成复现步骤与实际结果 / Report a reproducible problem
+body:
+  - type: markdown
+    attributes:
+      value: "安全漏洞请按 SECURITY.md 私下报告。请勿粘贴真实凭据、企业数据或未脱敏日志。 / Report vulnerabilities privately; exclude secrets and business data."
+  - type: input
+    id: revision
+    attributes:
+      label: 版本或提交 / Version or commit
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境 / Environment
+      description: 操作系统、Python/Node、数据库、部署方式；不要填写内部地址。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤 / Steps to reproduce
+      description: 使用合成输入，写明具体操作。
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 预期与实际结果 / Expected and actual result
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 补充证据 / Additional evidence
+      description: 仅提供最少且已脱敏的错误信息。

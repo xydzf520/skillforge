@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CsvFilePayload",
+  "type": "object",
+  "required": ["columns"],
+  "properties": {
+    "columns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "delimiter": {
+      "type": "string",
+      "default": ","
+    },
+    "encoding": {
+      "type": "string",
+      "default": "utf-8"
+    },
+    "filename": {
+      "type": "string"
+    },
+    "directory": {
+      "type": "string",
+      "description": "相对 data/raw 的子目录，如 'reports/2026'"
+    }
+  }
+}

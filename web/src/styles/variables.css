@@ -1,0 +1,33 @@
+/* SkillForge CSS 变量系统 — 间距 / 字号 / 圆角 / 过渡
+ *
+ * 颜色、阴影、字体栈等 token 已在 global.css 的 :root 中定义（Design System v0.5），
+ * 本文件仅补充间距（spacing）、字号（font-size）快捷变量和过渡速度，
+ * 供新组件直接引用，避免继续硬编码 8px / 12px 等魔法值。
+ */
+
+:root {
+  /* ── 间距系统 ── */
+  --sf-spacing-xs: 4px;
+  --sf-spacing-sm: 8px;
+  --sf-spacing-md: 12px;
+  --sf-spacing-lg: 16px;
+  --sf-spacing-xl: 24px;
+  --sf-spacing-xxl: 32px;
+
+  /* ── 圆角（与 global.css 互补） ── */
+  --sf-radius-sm: 4px;
+  --sf-radius-md: 8px;
+  --sf-radius-lg: 12px;
+  --sf-radius-pill: 999px;
+
+  /* ── 字体大小 ── */
+  --sf-font-xs: 12px;
+  --sf-font-sm: 13px;
+  --sf-font-md: 14px;
+  --sf-font-lg: 16px;
+  --sf-font-xl: 18px;
+
+  /* ── 过渡 ── */
+  --sf-transition-fast: 0.15s ease;
+  --sf-transition-normal: 0.3s ease;
+}

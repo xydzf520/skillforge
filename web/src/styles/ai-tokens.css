@@ -1,0 +1,1465 @@
+/*
+ * SkillForge design tokens — warm-neutral mono.
+ *
+ * 来源：design/src/tokens.css（设计稿 v1.0）
+ * 用途：1:1 还原设计稿时的基础变量 + 通用组件类（.ai-*）。
+ * 注意：变量挂在 :root，组件类前缀 `ai-` 避免与既有 Arco / sf- 系列冲突。
+ */
+
+:root {
+  /* warm-neutral surface scale */
+  --ai-bg:        #f7f6f3;
+  --ai-surface:   #ffffff;
+  --ai-surface-2: #f3f2ee;
+  --ai-surface-3: #ebe9e3;
+  --ai-border:    #e4e1da;
+  --ai-border-2:  #d4d0c6;
+  --ai-border-3:  #bcb6a8;
+
+  /* ink */
+  --ai-ink-1: #14130f;
+  --ai-ink-2: #3a3833;
+  --ai-ink-3: #6c685e;
+  --ai-ink-4: #9a958a;
+  --ai-ink-5: #c0bbae;
+
+  /* single restrained accent + role colors */
+  --ai-accent:      #3a5bd9;
+  --ai-accent-soft: #eef0ff;
+  --ai-accent-ink:  #2240b8;
+
+  --ai-ok:        #1d7b48;
+  --ai-ok-soft:   #e3f1e6;
+  --ai-warn:      #9a6b13;
+  --ai-warn-soft: #faf0d6;
+  --ai-bad:       #b6321b;
+  --ai-bad-soft:  #fbe6df;
+  --ai-info:      #1b5e8a;
+  --ai-info-soft: #dfeaf4;
+
+  --ai-font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ai-font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --ai-radius-s: 5px;
+  --ai-radius:   8px;
+  --ai-radius-l: 12px;
+
+  --ai-shadow-1: 0 1px 0 rgba(20, 19, 15, 0.04), 0 1px 2px rgba(20, 19, 15, 0.04);
+  --ai-shadow-2: 0 1px 0 rgba(20, 19, 15, 0.04), 0 6px 18px -8px rgba(20, 19, 15, 0.18);
+}
+
+/* ─────────── app-level container ─────────── */
+.ai-app {
+  font-family: var(--ai-font-sans);
+  color: var(--ai-ink-1);
+  background: var(--ai-bg);
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.005em;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ai-app,
+.ai-app * { box-sizing: border-box; }
+.ai-app button { font-family: inherit; cursor: pointer; }
+.ai-app input { font-family: inherit; }
+.ai-app .mono { font-family: var(--ai-font-mono); }
+
+/* ─────────── top bar ─────────── */
+.ai-topbar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  gap: 24px;
+}
+.ai-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.015em;
+  color: var(--ai-ink-1);
+}
+.ai-brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--ai-ink-1);
+  color: var(--ai-surface);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ai-topnav { display: flex; gap: 2px; align-items: center; }
+.ai-topnav-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ai-ink-3);
+  font-weight: 450;
+  text-decoration: none;
+}
+.ai-topnav-item:hover { background: var(--ai-surface-2); color: var(--ai-ink-2); }
+.ai-topnav-item.active {
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-1);
+  font-weight: 500;
+}
+.ai-topbar-spacer { flex: 1; }
+.ai-topbar-search {
+  height: 30px;
+  width: 220px;
+  border: 1px solid var(--ai-border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  font-size: 12.5px;
+  color: var(--ai-ink-4);
+  background: var(--ai-surface);
+  cursor: pointer;
+}
+.ai-iconbtn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: var(--ai-ink-3);
+  position: relative;
+  background: transparent;
+  border: 0;
+}
+.ai-iconbtn:hover { background: var(--ai-surface-2); color: var(--ai-ink-1); }
+.ai-iconbtn .dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ai-bad);
+}
+.ai-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d8d2c0, #a6a18f);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ai-ink-1);
+}
+
+/* ─────────── left sub-nav ─────────── */
+.ai-sidebar {
+  width: 220px;
+  flex: 0 0 220px;
+  border-right: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  padding: 16px 12px;
+}
+.ai-side-group { margin-bottom: 18px; }
+.ai-side-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ai-ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 8px 6px;
+}
+.ai-side-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: var(--ai-ink-2);
+  cursor: pointer;
+  text-decoration: none;
+}
+.ai-side-item .ic { color: var(--ai-ink-4); }
+.ai-side-item:hover { background: var(--ai-surface-2); }
+.ai-side-item.active { background: var(--ai-surface-2); color: var(--ai-ink-1); font-weight: 500; }
+.ai-side-item.active .ic { color: var(--ai-ink-1); }
+.ai-side-item .count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ai-ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────── page chrome ─────────── */
+.ai-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ai-bg);
+}
+.ai-pagehead {
+  padding: 22px 28px 16px;
+  border-bottom: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ai-crumbs { font-size: 12px; color: var(--ai-ink-4); margin-bottom: 6px; }
+.ai-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ai-ink-1);
+}
+.ai-sub { margin: 4px 0 0; font-size: 13px; color: var(--ai-ink-3); }
+.ai-pagebody { padding: 20px 28px; flex: 1; }
+
+/* ─────────── buttons ─────────── */
+.ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  color: var(--ai-ink-1);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.ai-btn:hover { background: var(--ai-surface-2); }
+.ai-btn.primary {
+  background: var(--ai-ink-1);
+  color: var(--ai-surface);
+  border-color: var(--ai-ink-1);
+}
+.ai-btn.primary:hover { background: #000; }
+.ai-btn.ghost { border-color: transparent; }
+.ai-btn.sm { height: 26px; padding: 0 10px; font-size: 12px; }
+.ai-btn.accent { background: var(--ai-accent); color: white; border-color: var(--ai-accent); }
+
+/* ─────────── pills / badges ─────────── */
+.ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ai-ink-2);
+  background: var(--ai-surface-2);
+  border: 1px solid var(--ai-border);
+}
+.ai-pill.ok     { color: var(--ai-ok);     background: var(--ai-ok-soft);     border-color: transparent; }
+.ai-pill.warn   { color: var(--ai-warn);   background: var(--ai-warn-soft);   border-color: transparent; }
+.ai-pill.bad    { color: var(--ai-bad);    background: var(--ai-bad-soft);    border-color: transparent; }
+.ai-pill.info   { color: var(--ai-info);   background: var(--ai-info-soft);   border-color: transparent; }
+.ai-pill.accent { color: var(--ai-accent-ink); background: var(--ai-accent-soft); border-color: transparent; }
+.ai-pill.dot::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ─────────── card ─────────── */
+.ai-card {
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  border-radius: var(--ai-radius);
+}
+.ai-card-h {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ai-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ai-card-h .t { font-weight: 500; font-size: 13px; color: var(--ai-ink-1); }
+.ai-card-h .s { font-size: 12px; color: var(--ai-ink-4); }
+
+/* ─────────── inputs ─────────── */
+.ai-input {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--ai-border);
+  border-radius: 6px;
+  font-size: 12.5px;
+  background: var(--ai-surface);
+  color: var(--ai-ink-1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ai-input.placeholder { color: var(--ai-ink-4); }
+
+/* ─────────── tabs ─────────── */
+.ai-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--ai-border);
+  padding: 0 28px;
+  background: var(--ai-surface);
+}
+.ai-tab {
+  height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ai-ink-3);
+  border-bottom: 1.5px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.ai-tab.active {
+  color: var(--ai-ink-1);
+  border-bottom-color: var(--ai-ink-1);
+  font-weight: 500;
+}
+
+/* ─────────── tables ─────────── */
+.ai-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.ai-table thead th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--ai-ink-4);
+  padding: 8px 10px;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--ai-border);
+}
+.ai-table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--ai-border);
+  vertical-align: middle;
+}
+.ai-table tbody tr:hover { background: var(--ai-surface-2); }
+
+/* ─────────── dividers ─────────── */
+.ai-hr { height: 1px; background: var(--ai-border); border: 0; margin: 0; }
+.ai-vr { width: 1px; background: var(--ai-border); align-self: stretch; }
+
+/* ─────────── section header inside a page ─────────── */
+.ai-secthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 10px;
+}
+.ai-secthead .t { font-size: 13px; font-weight: 600; letter-spacing: -0.005em; color: var(--ai-ink-1); }
+.ai-secthead .s { font-size: 12px; color: var(--ai-ink-4); }
+.ai-secthead .link { font-size: 12px; color: var(--ai-ink-3); }
+
+/* ─────────── utility ─────────── */
+.ai-row { display: flex; align-items: center; gap: 8px; }
+.ai-col { display: flex; flex-direction: column; }
+.ai-muted { color: var(--ai-ink-3); }
+.ai-tiny  { font-size: 11px; }
+.ai-mono-id { font-family: var(--ai-font-mono); font-size: 11.5px; color: var(--ai-ink-3); }
+
+/* ─────────── sparkline rail ─────────── */
+.ai-spark { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+.ai-spark i { width: 3px; background: var(--ai-ink-5); border-radius: 1px; display: block; }
+
+/* ─────────── dept color dot ─────────── */
+.ai-deptdot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
+/* ─────────── Arco modal — global flat restyle ───────────
+ * 全局覆盖 Arco a-modal 默认圆角 / 大阴影 / 灰色 header / arcoblue 主按钮，
+ * 与 Crisp Mono 扁平基调对齐：ai-border + ai-radius + ink-1 14/600 title +
+ * 13/450 body + sticky footer with .ai-btn primary (ink-1) + .ai-btn (surface)。
+ */
+.arco-modal {
+  border-radius: var(--ai-radius-l);
+  box-shadow: var(--ai-shadow-2);
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  overflow: hidden;
+}
+.arco-modal-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--ai-border);
+  box-shadow: none;
+  background: var(--ai-surface);
+  height: auto;
+  min-height: 0;
+}
+.arco-modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ai-ink-1);
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+}
+.arco-modal-body {
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--ai-ink-2);
+  line-height: 1.55;
+  padding: 16px 20px;
+  background: var(--ai-surface);
+}
+.arco-modal-footer {
+  border-top: 1px solid var(--ai-border);
+  padding: 14px 20px;
+  background: var(--ai-surface);
+  text-align: right;
+}
+.arco-modal-footer .arco-btn-primary,
+.arco-modal-footer .arco-btn-primary:not(:disabled):not(.arco-btn-disabled) {
+  background: var(--ai-ink-1);
+  color: var(--ai-surface);
+  border: 1px solid var(--ai-ink-1);
+  border-radius: 6px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.arco-modal-footer .arco-btn-primary:hover,
+.arco-modal-footer .arco-btn-primary:not(:disabled):not(.arco-btn-disabled):hover {
+  background: #000;
+  border-color: #000;
+  color: var(--ai-surface);
+}
+.arco-modal-footer .arco-btn {
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-ink-1);
+  border-radius: 6px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.arco-modal-footer .arco-btn:hover {
+  background: var(--ai-surface-2);
+  border-color: var(--ai-border-2);
+  color: var(--ai-ink-1);
+}
+.arco-modal .arco-icon-hover {
+  color: var(--ai-ink-4);
+}
+.arco-modal .arco-icon-hover:hover {
+  color: var(--ai-ink-1);
+  background: var(--ai-surface-2);
+}
+.arco-modal .arco-icon-hover::before {
+  background-color: transparent;
+}
+.arco-modal .arco-icon-hover:hover::before {
+  background-color: var(--ai-surface-2);
+}
+
+/* ─────────── Arco drawer — global flat restyle ─────────── */
+.arco-drawer {
+  border-left: 1px solid var(--ai-border);
+  box-shadow: none;
+  background: var(--ai-surface);
+}
+.arco-drawer-left {
+  border-left: 0;
+  border-right: 1px solid var(--ai-border);
+}
+.arco-drawer-top {
+  border-left: 0;
+  border-bottom: 1px solid var(--ai-border);
+}
+.arco-drawer-bottom {
+  border-left: 0;
+  border-top: 1px solid var(--ai-border);
+}
+.arco-drawer-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--ai-border);
+  box-shadow: none;
+  background: var(--ai-surface);
+  height: auto;
+  min-height: 0;
+}
+.arco-drawer-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ai-ink-1);
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+}
+.arco-drawer-body {
+  background: var(--ai-bg);
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--ai-ink-2);
+  line-height: 1.55;
+}
+.arco-drawer-footer {
+  border-top: 1px solid var(--ai-border);
+  padding: 14px 20px;
+  background: var(--ai-surface);
+  text-align: right;
+}
+.arco-drawer-footer .arco-btn-primary,
+.arco-drawer-footer .arco-btn-primary:not(:disabled):not(.arco-btn-disabled) {
+  background: var(--ai-ink-1);
+  color: var(--ai-surface);
+  border: 1px solid var(--ai-ink-1);
+  border-radius: 6px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.arco-drawer-footer .arco-btn-primary:hover,
+.arco-drawer-footer .arco-btn-primary:not(:disabled):not(.arco-btn-disabled):hover {
+  background: #000;
+  border-color: #000;
+  color: var(--ai-surface);
+}
+.arco-drawer-footer .arco-btn {
+  background: var(--ai-surface);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-ink-1);
+  border-radius: 6px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.arco-drawer-footer .arco-btn:hover {
+  background: var(--ai-surface-2);
+  border-color: var(--ai-border-2);
+  color: var(--ai-ink-1);
+}
+.arco-drawer .arco-icon-hover {
+  color: var(--ai-ink-4);
+}
+.arco-drawer .arco-icon-hover:hover {
+  color: var(--ai-ink-1);
+  background: var(--ai-surface-2);
+}
+.arco-drawer .arco-icon-hover::before {
+  background-color: transparent;
+}
+.arco-drawer .arco-icon-hover:hover::before {
+  background-color: var(--ai-surface-2);
+}
+
+/* ─────────── Arco message — global flat restyle ─────────── */
+.arco-message {
+  border-radius: 6px;
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  color: var(--ai-ink-1);
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.5;
+  padding: 8px 12px;
+  box-shadow: var(--ai-shadow-1);
+}
+.arco-message .arco-message-icon {
+  color: inherit;
+}
+.arco-message-info {
+  background: var(--ai-info-soft);
+  border-color: transparent;
+  color: var(--ai-info);
+}
+.arco-message-success {
+  background: var(--ai-ok-soft);
+  border-color: transparent;
+  color: var(--ai-ok);
+}
+.arco-message-warning {
+  background: var(--ai-warn-soft);
+  border-color: transparent;
+  color: var(--ai-warn);
+}
+.arco-message-error {
+  background: var(--ai-bad-soft);
+  border-color: transparent;
+  color: var(--ai-bad);
+}
+.arco-message-normal {
+  background: var(--ai-surface);
+  border-color: var(--ai-border);
+  color: var(--ai-ink-1);
+}
+.arco-message-loading {
+  background: var(--ai-surface);
+  border-color: var(--ai-border);
+  color: var(--ai-ink-2);
+}
+
+/* ─────────── Arco notification — global flat restyle ─────────── */
+.arco-notification {
+  border-radius: var(--ai-radius);
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface);
+  color: var(--ai-ink-1);
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.5;
+  box-shadow: var(--ai-shadow-2);
+  padding: 12px 14px;
+}
+.arco-notification .arco-notification-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-ink-1);
+  letter-spacing: -0.005em;
+}
+.arco-notification .arco-notification-content {
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--ai-ink-2);
+  line-height: 1.55;
+}
+.arco-notification .arco-notification-icon {
+  color: inherit;
+}
+.arco-notification-info {
+  background: var(--ai-info-soft);
+  border-color: transparent;
+}
+.arco-notification-info .arco-notification-title,
+.arco-notification-info .arco-notification-icon {
+  color: var(--ai-info);
+}
+.arco-notification-success {
+  background: var(--ai-ok-soft);
+  border-color: transparent;
+}
+.arco-notification-success .arco-notification-title,
+.arco-notification-success .arco-notification-icon {
+  color: var(--ai-ok);
+}
+.arco-notification-warning {
+  background: var(--ai-warn-soft);
+  border-color: transparent;
+}
+.arco-notification-warning .arco-notification-title,
+.arco-notification-warning .arco-notification-icon {
+  color: var(--ai-warn);
+}
+.arco-notification-error {
+  background: var(--ai-bad-soft);
+  border-color: transparent;
+}
+.arco-notification-error .arco-notification-title,
+.arco-notification-error .arco-notification-icon {
+  color: var(--ai-bad);
+}
+.arco-notification-normal {
+  background: var(--ai-surface);
+  border-color: var(--ai-border);
+}
+
+/* ─────────── Arco a-button 全局对齐设计稿 Crisp Mono ─────────── */
+/* 设计稿主按钮：ink-1 黑底白字 / 6px 圆角 / 30px 高 / 无阴影。
+ * Arco 默认 type="primary" 是 arcoblue gradient；这里强制覆盖，
+ * 让全站所有 <a-button type="primary"> 自动跟设计稿一致。 */
+.arco-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: none;
+  font-family: var(--ai-font-sans);
+  letter-spacing: -0.005em;
+}
+.arco-btn-primary {
+  background: var(--ai-ink-1) !important;
+  border-color: var(--ai-ink-1) !important;
+  color: var(--ai-surface) !important;
+  background-image: none !important;
+}
+.arco-btn-primary:hover,
+.arco-btn-primary:focus {
+  background: #000 !important;
+  border-color: #000 !important;
+}
+.arco-btn-primary:disabled,
+.arco-btn-primary.arco-btn-disabled {
+  background: var(--ai-ink-4) !important;
+  border-color: var(--ai-ink-4) !important;
+  color: var(--ai-surface) !important;
+  opacity: 0.6;
+}
+/* status="warning" 主按钮：保留 warn 语义但用 ai-warn 而非 Arco 默认橙 */
+.arco-btn-primary.arco-btn-status-warning {
+  background: var(--ai-warn) !important;
+  border-color: var(--ai-warn) !important;
+}
+.arco-btn-primary.arco-btn-status-warning:hover {
+  background: #7a5410 !important;
+  border-color: #7a5410 !important;
+}
+.arco-btn-primary.arco-btn-status-danger {
+  background: var(--ai-bad) !important;
+  border-color: var(--ai-bad) !important;
+}
+.arco-btn-primary.arco-btn-status-danger:hover {
+  background: #962614 !important;
+  border-color: #962614 !important;
+}
+.arco-btn-primary.arco-btn-status-success {
+  background: var(--ai-ok) !important;
+  border-color: var(--ai-ok) !important;
+}
+.arco-btn-primary.arco-btn-status-success:hover {
+  background: #155f37 !important;
+  border-color: #155f37 !important;
+}
+/* outline (secondary) 按钮：边框 + 透明底 + ink-1 文字 */
+.arco-btn-outline {
+  background: var(--ai-surface) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-ink-1) !important;
+}
+.arco-btn-outline:hover {
+  background: var(--ai-surface-2) !important;
+  border-color: var(--ai-border-2) !important;
+}
+.arco-btn-outline.arco-btn-status-warning {
+  color: var(--ai-warn) !important;
+  border-color: var(--ai-warn) !important;
+}
+.arco-btn-outline.arco-btn-status-danger {
+  color: var(--ai-bad) !important;
+  border-color: var(--ai-bad) !important;
+}
+.arco-btn-outline.arco-btn-status-success {
+  color: var(--ai-ok) !important;
+  border-color: var(--ai-ok) !important;
+}
+
+/* ─────────── Arco a-input / a-select / a-input-search 对齐设计稿 .ai-input ─────────── */
+/* 设计稿 .ai-input 是白底 + ai-border + 6px 圆角；Arco 默认 input-wrapper 是
+ * var(--color-fill-2)（暖灰底）。这里全局拉到 ai-surface 让所有页面统一。 */
+.arco-input-wrapper,
+.arco-textarea-wrapper,
+.arco-select-view {
+  background: var(--ai-surface) !important;
+  border: 1px solid var(--ai-border) !important;
+  border-radius: 6px !important;
+  font-family: var(--ai-font-sans);
+}
+.arco-input-wrapper:hover,
+.arco-textarea-wrapper:hover,
+.arco-select-view:hover {
+  border-color: var(--ai-border-2) !important;
+  background: var(--ai-surface) !important;
+}
+.arco-input-wrapper.arco-input-focus,
+.arco-input-wrapper:focus-within,
+.arco-textarea-wrapper:focus-within,
+.arco-select-view.arco-select-view-focus,
+.arco-select-view-focus,
+.arco-picker-focused {
+  border-color: var(--ai-ink-1) !important;
+  /* 设计稿 focus: 1px ai-ink-1 边框 + 浅灰外环模拟"焦点光晕"，不要 arcoblue 2px 阴影 */
+  box-shadow: 0 0 0 1px var(--ai-surface-2) !important;
+  background: var(--ai-surface) !important;
+}
+.arco-input-wrapper .arco-input,
+.arco-textarea-wrapper .arco-textarea {
+  background: transparent !important;
+  color: var(--ai-ink-1);
+  font-size: 12.5px;
+}
+.arco-input-wrapper .arco-input::placeholder,
+.arco-textarea-wrapper .arco-textarea::placeholder,
+.arco-select-view-value-placeholder {
+  color: var(--ai-ink-4) !important;
+}
+.arco-input-prefix,
+.arco-input-suffix {
+  color: var(--ai-ink-4);
+}
+/* select 下拉箭头 + 单选按钮组 */
+.arco-select-view-suffix .arco-icon {
+  color: var(--ai-ink-4);
+}
+.arco-select-dropdown {
+  border-radius: 6px;
+  border: 1px solid var(--ai-border);
+  box-shadow: var(--ai-shadow-2);
+}
+.arco-select-option-selected {
+  background: var(--ai-surface-2) !important;
+  color: var(--ai-ink-1) !important;
+  font-weight: 500;
+}
+.arco-select-option-hover {
+  background: var(--ai-surface-2) !important;
+}
+/* radio-group type=button 用作 segmented control */
+.arco-radio-group-button {
+  background: var(--ai-surface-2);
+  border-radius: 6px;
+  padding: 2px;
+}
+.arco-radio-group-button .arco-radio-button {
+  background: transparent;
+  border: 0;
+  padding: 0 12px;
+  height: 26px;
+  line-height: 26px;
+  font-size: 12.5px;
+  color: var(--ai-ink-3);
+  border-radius: 4px;
+}
+.arco-radio-group-button .arco-radio-button-content::before {
+  display: none !important;
+}
+.arco-radio-group-button .arco-radio-checked .arco-radio-button-content {
+  background: var(--ai-surface) !important;
+  color: var(--ai-ink-1) !important;
+  font-weight: 500;
+  box-shadow: var(--ai-shadow-1);
+}
+
+/* ─────────── Arco a-table 全局对齐设计稿 ai-table ─────────── */
+/* 设计稿 .ai-table：thead 11.5px uppercase ink-4 letter-spacing 0.04em；
+ * td 12.5px ink-1 border-bottom ai-border；row hover surface-2。 */
+.arco-table .arco-table-th {
+  background: var(--ai-surface-2) !important;
+  color: var(--ai-ink-4) !important;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--ai-border) !important;
+  padding: 8px 10px !important;
+}
+.arco-table .arco-table-td {
+  font-size: 12.5px;
+  color: var(--ai-ink-1);
+  padding: 10px 10px !important;
+  border-bottom: 1px solid var(--ai-border) !important;
+  background: var(--ai-surface);
+}
+.arco-table .arco-table-tr:hover > .arco-table-td,
+.arco-table .arco-table-tr.arco-table-tr-hover > .arco-table-td {
+  background: var(--ai-surface-2) !important;
+}
+.arco-table .arco-table-tr.arco-table-tr-checked > .arco-table-td {
+  background: var(--ai-accent-soft) !important;
+}
+.arco-table .arco-table-container,
+.arco-table .arco-table-content {
+  border-radius: var(--ai-radius);
+}
+
+/* ─────────── Arco a-tag 全局对齐设计稿 ai-pill ─────────── */
+/* 设计稿 .ai-pill：20px 高、4px 圆角、11px/500、ai-surface-2 默认底；
+ * 颜色变体 (color="green" 等) 映射到 ai-ok/warn/bad/info 软色 + 同色文字。 */
+.arco-tag {
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-2);
+}
+.arco-tag-size-small,
+.arco-tag-size-mini {
+  height: 18px;
+  padding: 0 6px;
+  font-size: 10.5px;
+}
+.arco-tag-color-gray,
+.arco-tag-color-grey {
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-2);
+  border-color: var(--ai-border);
+}
+.arco-tag-color-green {
+  background: var(--ai-ok-soft);
+  color: var(--ai-ok);
+  border-color: transparent;
+}
+.arco-tag-color-red {
+  background: var(--ai-bad-soft);
+  color: var(--ai-bad);
+  border-color: transparent;
+}
+.arco-tag-color-orange,
+.arco-tag-color-orangered,
+.arco-tag-color-gold {
+  background: var(--ai-warn-soft);
+  color: var(--ai-warn);
+  border-color: transparent;
+}
+.arco-tag-color-arcoblue,
+.arco-tag-color-blue {
+  background: var(--ai-info-soft);
+  color: var(--ai-info);
+  border-color: transparent;
+}
+.arco-tag-color-cyan {
+  background: var(--ai-info-soft);
+  color: var(--ai-info);
+  border-color: transparent;
+}
+.arco-tag-color-purple,
+.arco-tag-color-magenta,
+.arco-tag-color-pinkpurple {
+  background: var(--ai-accent-soft);
+  color: var(--ai-accent-ink);
+  border-color: transparent;
+}
+
+/* ─────────── Arco a-tabs 全局对齐设计稿 ai-tabs ─────────── */
+/* 设计稿 .ai-tabs：36px 高、ink-3 默认 / ink-1 active、1.5px ink-1 active 下划线。
+ * Arco 默认 active 用 arcoblue + 2px 蓝下划线，需要全部覆盖。 */
+.arco-tabs-tab {
+  padding: 0 12px;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--ai-ink-3) !important;
+  letter-spacing: -0.005em;
+}
+.arco-tabs-tab-active {
+  color: var(--ai-ink-1) !important;
+  font-weight: 500;
+}
+.arco-tabs-tab:hover:not(.arco-tabs-tab-disabled) {
+  color: var(--ai-ink-2) !important;
+}
+.arco-tabs-nav-ink {
+  background: var(--ai-ink-1) !important;
+  height: 1.5px !important;
+}
+.arco-tabs-nav-type-line .arco-tabs-tab::before {
+  background: var(--ai-border);
+}
+
+/* ─────────── Arco a-pagination 对齐设计稿 ─────────── */
+.arco-pagination .arco-pagination-item {
+  height: 28px;
+  min-width: 28px;
+  font-size: 12.5px;
+  color: var(--ai-ink-3);
+  background: transparent;
+  border-radius: 4px;
+}
+.arco-pagination .arco-pagination-item:hover {
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-1);
+}
+.arco-pagination .arco-pagination-item-active {
+  background: var(--ai-ink-1) !important;
+  color: var(--ai-surface) !important;
+  border-color: var(--ai-ink-1) !important;
+}
+.arco-pagination .arco-pagination-jumper-input,
+.arco-pagination .arco-pagination-size-option {
+  border-radius: 4px;
+}
+
+/* ─────────── Arco a-button type="text" 全局对齐 ─────────── */
+/* Arco 默认 type=text 用 arcoblue（如 inbox 顶部"刷新"），所有页面 type=text 都受影响。
+ * 设计稿对应"次要纯文字按钮"风格：ai-ink-3 默认 + hover ai-ink-1 + 浅 surface-2 hover bg。 */
+.arco-btn-text {
+  color: var(--ai-ink-3) !important;
+  background: transparent !important;
+}
+.arco-btn-text:not(.arco-btn-disabled):hover,
+.arco-btn-text:not(.arco-btn-disabled):focus-visible {
+  color: var(--ai-ink-1) !important;
+  background: var(--ai-surface-2) !important;
+}
+.arco-btn-text.arco-btn-disabled {
+  color: var(--ai-ink-4) !important;
+  background: transparent !important;
+}
+
+/* ─────────── Arco a-button type="secondary" 全局对齐 ─────────── */
+/* 同样默认会带 arcoblue 浅底，需要回归到 surface + border 风格。 */
+.arco-btn-secondary {
+  background: var(--ai-surface) !important;
+  color: var(--ai-ink-1) !important;
+  border: 1px solid var(--ai-border) !important;
+}
+.arco-btn-secondary:not(.arco-btn-disabled):hover {
+  background: var(--ai-surface-2) !important;
+  border-color: var(--ai-border) !important;
+}
+
+/* ─────────── Arco a-link 全局对齐 ─────────── */
+/* 设计稿 .ai-link：ai-ink-1 主色，无下划线，hover 才显示。 */
+.arco-link {
+  color: var(--ai-ink-1) !important;
+}
+.arco-link:not(.arco-link-disabled):hover {
+  color: var(--ai-ink-1) !important;
+  background: var(--ai-surface-2) !important;
+}
+
+/* ─────────── Arco a-checkbox / a-radio accent 全局对齐 ─────────── */
+.arco-checkbox-checked .arco-checkbox-icon {
+  background: var(--ai-ink-1) !important;
+  border-color: var(--ai-ink-1) !important;
+}
+.arco-radio:not(.arco-radio-disabled).arco-radio-checked .arco-radio-icon {
+  border-color: var(--ai-ink-1) !important;
+}
+.arco-radio:not(.arco-radio-disabled).arco-radio-checked .arco-radio-icon::after {
+  background: var(--ai-ink-1) !important;
+}
+
+/* ─────────── Arco a-switch 全局对齐 ─────────── */
+.arco-switch-checked {
+  background: var(--ai-ink-1) !important;
+}
+
+/* ─────────── Arco a-modal 头尾分隔线 ─────────── */
+/* 设计稿 modal 用 1px ai-border，Arco 默认无边框或太深。 */
+.arco-modal .arco-modal-header {
+  border-bottom: 1px solid var(--ai-border);
+  padding: 14px 20px;
+}
+.arco-modal .arco-modal-footer {
+  border-top: 1px solid var(--ai-border);
+  padding: 12px 20px;
+}
+.arco-modal .arco-modal-title {
+  color: var(--ai-ink-1);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+}
+
+/* ─────────── Arco a-button type="outline" 全局对齐 ─────────── */
+/* Arco 默认 type=outline 用 arcoblue（蓝色边框 + 蓝色文字）。
+ * 设计稿对应 ai-btn 灰底 border 风格，没有蓝色。 */
+.arco-btn-outline {
+  background: var(--ai-surface) !important;
+  color: var(--ai-ink-1) !important;
+  border: 1px solid var(--ai-border) !important;
+}
+.arco-btn-outline:not(.arco-btn-disabled):hover {
+  background: var(--ai-surface-2) !important;
+  color: var(--ai-ink-1) !important;
+  border-color: var(--ai-border) !important;
+}
+.arco-btn-outline.arco-btn-disabled {
+  background: var(--ai-surface) !important;
+  color: var(--ai-ink-4) !important;
+  border-color: var(--ai-border) !important;
+}
+/* status=warning 改成 warn 软底 + 黄色文字，不是整个按钮全黄。 */
+.arco-btn-outline.arco-btn-status-warning {
+  background: var(--ai-warn-soft) !important;
+  color: var(--ai-warn) !important;
+  border-color: transparent !important;
+}
+.arco-btn-outline.arco-btn-status-warning:not(.arco-btn-disabled):hover {
+  background: var(--ai-warn-soft) !important;
+  filter: brightness(0.97);
+  border-color: transparent !important;
+}
+.arco-btn-outline.arco-btn-status-danger {
+  background: var(--ai-bad-soft) !important;
+  color: var(--ai-bad) !important;
+  border-color: transparent !important;
+}
+.arco-btn-outline.arco-btn-status-success {
+  background: var(--ai-ok-soft) !important;
+  color: var(--ai-ok) !important;
+  border-color: transparent !important;
+}
+
+/* ─────────── Arco a-spin loading 全局对齐 ─────────── */
+/* Arco 默认 loading dot 是 arcoblue，所有 loading 状态都受影响（102 处使用）。
+ * 设计稿对应纯黑 ai-ink-1 ink。 */
+.arco-spin-icon,
+.arco-spin-dot {
+  color: var(--ai-ink-1) !important;
+}
+.arco-spin-dot-item {
+  background: var(--ai-ink-1) !important;
+}
+.arco-spin-tip {
+  color: var(--ai-ink-3);
+  font-size: 12.5px;
+}
+.arco-spin-mask {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ─────────── Arco a-empty 全局对齐 ─────────── */
+/* 默认 empty 图标是浅 arcoblue 风格，对齐设计稿 ai-ink-4 灰色 + 12.5px ai-ink-3 文字。 */
+.arco-empty .arco-empty-image {
+  color: var(--ai-ink-4);
+}
+.arco-empty .arco-empty-image .arco-icon {
+  color: var(--ai-ink-4);
+}
+.arco-empty .arco-empty-description {
+  color: var(--ai-ink-3);
+  font-size: 12.5px;
+  margin-top: 8px;
+}
+
+/* ─────────── Arco a-progress 全局对齐 ─────────── */
+/* 默认 progress fill 是 arcoblue，对齐设计稿 ai-ink-1（成功 ai-ok / 警告 ai-warn / 错误 ai-bad）。 */
+.arco-progress-line-bar {
+  background: var(--ai-surface-2) !important;
+}
+.arco-progress-line-percent {
+  background: var(--ai-ink-1) !important;
+}
+.arco-progress-status-success .arco-progress-line-percent,
+.arco-progress-line-bar.arco-progress-line-bar-success .arco-progress-line-percent {
+  background: var(--ai-ok) !important;
+}
+.arco-progress-status-warning .arco-progress-line-percent {
+  background: var(--ai-warn) !important;
+}
+.arco-progress-status-danger .arco-progress-line-percent {
+  background: var(--ai-bad) !important;
+}
+.arco-progress-text {
+  font-size: 11.5px;
+  color: var(--ai-ink-3);
+  font-family: var(--ai-font-mono);
+  letter-spacing: 0;
+}
+
+/* ─────────── dashed border utility classes ─────────── */
+/* webkit/blink 把 border-top: 1px dashed 渲染成 solid（虚线长度算法 bug）。
+ * 用 CSS background gradient 模拟更可靠的 6px-on / 6px-off 虚线序列。
+ * 用法：在使用 1px dashed border-* 的元素上替换为这些 class。 */
+.ai-dashed-top {
+  background-image: linear-gradient(to right, var(--ai-border-2) 50%, transparent 0%);
+  background-position: top;
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+}
+.ai-dashed-bottom {
+  background-image: linear-gradient(to right, var(--ai-border-2) 50%, transparent 0%);
+  background-position: bottom;
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+}
+.ai-dashed-x {
+  background-image:
+    linear-gradient(to right, var(--ai-border-2) 50%, transparent 0%),
+    linear-gradient(to right, var(--ai-border-2) 50%, transparent 0%);
+  background-position: top, bottom;
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+}
+
+/* ─────────── Arco a-alert 全局对齐 ─────────── */
+/* Arco 默认 info 浅蓝（arcoblue tint），需要映射到 ai-info-soft + ai-info-ink。
+ * 5 个 status：info / success / warning / error / normal 全部对齐 ai-* token */
+.arco-alert {
+  border-radius: var(--ai-radius);
+  border: 1px solid transparent;
+  padding: 10px 14px;
+  font-size: 12.5px;
+}
+.arco-alert .arco-alert-title {
+  color: inherit;
+  font-weight: 500;
+  font-size: 13px;
+}
+.arco-alert .arco-alert-content {
+  font-size: 12.5px;
+  color: inherit;
+  opacity: 0.85;
+}
+.arco-alert-normal {
+  background: var(--ai-surface-2) !important;
+  color: var(--ai-ink-2) !important;
+}
+.arco-alert-info {
+  background: var(--ai-info-soft) !important;
+  color: var(--ai-info) !important;
+}
+.arco-alert-success {
+  background: var(--ai-ok-soft) !important;
+  color: var(--ai-ok) !important;
+}
+.arco-alert-warning {
+  background: var(--ai-warn-soft) !important;
+  color: var(--ai-warn) !important;
+}
+.arco-alert-error {
+  background: var(--ai-bad-soft) !important;
+  color: var(--ai-bad) !important;
+}
+.arco-alert .arco-alert-icon-wrapper .arco-icon {
+  color: inherit;
+}
+
+/* ─────────── Arco a-tooltip 全局对齐 ─────────── */
+/* 默认黑底白字小气泡，设计稿同样风格但用 ai-ink-1 (#0f1011) 而非纯黑。 */
+.arco-tooltip-content {
+  background: var(--ai-ink-1) !important;
+  color: var(--ai-surface) !important;
+  font-size: 12px;
+  border-radius: 6px;
+  padding: 6px 10px;
+  box-shadow: var(--ai-shadow-2);
+}
+.arco-tooltip-popup .arco-trigger-arrow {
+  background: var(--ai-ink-1) !important;
+}
+
+/* ─────────── Arco a-badge 全局对齐 ─────────── */
+/* 默认 arcoblue 圆点徽章。设计稿用 ai-bad 红色（计数 / 未读标记） */
+.arco-badge-number,
+.arco-badge-text {
+  background: var(--ai-bad) !important;
+  color: var(--ai-surface) !important;
+  font-size: 10px;
+  font-weight: 600;
+}
+.arco-badge-status-default { background: var(--ai-ink-4) !important; }
+.arco-badge-status-success { background: var(--ai-ok) !important; }
+.arco-badge-status-warning { background: var(--ai-warn) !important; }
+.arco-badge-status-error,
+.arco-badge-status-danger { background: var(--ai-bad) !important; }
+.arco-badge-status-processing { background: var(--ai-info) !important; }
+
+/* ─────────── Arco a-popover 全局对齐 ─────────── */
+.arco-popover-popup-content {
+  background: var(--ai-surface) !important;
+  border: 1px solid var(--ai-border);
+  box-shadow: var(--ai-shadow-2);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.arco-popover-popup .arco-trigger-arrow {
+  background: var(--ai-surface) !important;
+  border-color: var(--ai-border) !important;
+}
+.arco-popover-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-ink-1);
+}
+
+/* ─────────── Arco a-date-picker / a-range-picker 弹出面板 全局对齐 ─────────── */
+/* 默认 selected/today 用 arcoblue 蓝圆。设计稿用 ai-ink-1 黑圆。 */
+.arco-picker-container,
+.arco-picker-panel-wrapper {
+  background: var(--ai-surface) !important;
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+  box-shadow: var(--ai-shadow-2);
+}
+.arco-picker-header {
+  border-bottom: 1px solid var(--ai-border);
+}
+.arco-picker-header-icon,
+.arco-picker-header-title {
+  color: var(--ai-ink-2);
+}
+.arco-picker-header-icon:hover {
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-1);
+}
+.arco-picker-week-list-item {
+  color: var(--ai-ink-4);
+  font-size: 11px;
+  font-weight: 500;
+}
+.arco-picker-cell .arco-picker-date-value {
+  color: var(--ai-ink-1);
+}
+.arco-picker-cell-disabled .arco-picker-date-value,
+.arco-picker-cell-in-view-not .arco-picker-date-value {
+  color: var(--ai-ink-4);
+  opacity: 0.55;
+}
+/* 选中区间内的日期：浅灰底（必须先写，避免覆盖 range-start/-end） */
+.arco-picker-cell-in-range .arco-picker-date-value,
+.arco-picker-cell-range-hover .arco-picker-date-value {
+  background: var(--ai-surface-2) !important;
+  color: var(--ai-ink-1);
+}
+/* 今天（圈描边而非填充） */
+.arco-picker-cell-today .arco-picker-date-value {
+  border: 1px solid var(--ai-ink-1) !important;
+  border-radius: 999px;
+  color: var(--ai-ink-1);
+}
+/* range-start/-end cell 同时有 in-range class，所以需要更高优先级（双类 selector）或写在后面 */
+.arco-picker-cell-selected .arco-picker-date-value,
+.arco-picker-cell-range-start .arco-picker-date-value,
+.arco-picker-cell-range-end .arco-picker-date-value,
+.arco-picker-cell-range-start.arco-picker-cell-in-range .arco-picker-date-value,
+.arco-picker-cell-range-end.arco-picker-cell-in-range .arco-picker-date-value {
+  background: var(--ai-ink-1) !important;
+  color: var(--ai-surface) !important;
+  border-radius: 999px;
+}
+.arco-picker-cell:hover .arco-picker-date-value:not([style*="background"]) {
+  background: var(--ai-surface-2);
+  border-radius: 999px;
+}
+
+/* TaskTree first-paint critical layout */
+/* Keep task-tree KPI/tabs stable on hard refresh before route-scoped CSS finishes loading. */
+.task-tree-page .tt-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 0;
+  border-bottom: 1px solid var(--ai-border);
+}
+.task-tree-page .tt-kpi-strip .kpi-cell {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 72px;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  border-left: 1px solid var(--ai-border);
+  background: transparent;
+}
+.task-tree-page .tt-kpi-strip .kpi-cell:first-child { border-left: 0; }
+.task-tree-page .tt-kpi-strip .kpi-label {
+  color: var(--ai-ink-4);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.task-tree-page .tt-kpi-strip .kpi-value {
+  color: var(--ai-ink-1);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.12;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--ai-font-mono);
+}
+.task-tree-page .tt-kpi-strip .kpi-sub {
+  min-width: 0;
+  margin-top: 1px;
+  color: var(--ai-ink-4);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.task-tree-page .tt-kpi-strip .kpi-cell.kpi-danger .kpi-value,
+.task-tree-page .tt-kpi-strip .kpi-cell.kpi-danger .kpi-sub { color: var(--ai-bad); }
+.task-tree-page .tt-kpi-strip .kpi-cell.kpi-ok .kpi-value { color: var(--ai-ok); }
+.task-tree-page .tt-status-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  overflow-x: auto;
+}
+.task-tree-page .tt-status-tabs .tt-status-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+}
+.task-tree-page .tt-panel-tabbar {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+}
+.task-tree-page .tt-panel-tabbar .tt-detail-tab {
+  flex: 0 0 auto;
+  min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  white-space: nowrap;
+}
+.task-tree-page .tt-panel-content {
+  min-width: 0;
+  overflow-x: auto;
+}
+.task-tree-page .tt-schedule-panel,
+.task-tree-page .sched-list,
+.task-tree-page .sched-item {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.task-tree-page .sched-item-head {
+  flex-wrap: wrap;
+}
+.task-tree-page .sched-title-block {
+  flex: 1 1 260px;
+}
+.task-tree-page .sched-actions {
+  flex: 0 1 auto;
+}
+.task-tree-page .sched-action {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.task-tree-page .sched-git-cell,
+.task-tree-page .sched-next-runs {
+  flex: 1 1 0;
+}
+.task-tree-page .sched-git-row {
+  flex: 1 1 auto;
+}
+.task-tree-page .sched-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+}
+@media (max-width: 1080px) {
+  .task-tree-page .tt-kpi-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .task-tree-page .tt-kpi-strip .kpi-cell:nth-child(3n + 1) { border-left: 0; }
+  .task-tree-page .tt-kpi-strip .kpi-cell:nth-child(n + 4) { border-top: 1px solid var(--ai-border); }
+}
+@media (max-width: 720px) {
+  .task-tree-page .tt-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .task-tree-page .tt-kpi-strip .kpi-cell { border-left: 1px solid var(--ai-border); }
+  .task-tree-page .tt-kpi-strip .kpi-cell:nth-child(odd) { border-left: 0; }
+  .task-tree-page .tt-kpi-strip .kpi-cell:nth-child(n + 3) { border-top: 1px solid var(--ai-border); }
+  .task-tree-page .sched-metrics { grid-template-columns: repeat(auto-fit, minmax(126px, 1fr)); }
+}
+@media (max-width: 420px) {
+  .task-tree-page .sched-metrics { grid-template-columns: 1fr; }
+}

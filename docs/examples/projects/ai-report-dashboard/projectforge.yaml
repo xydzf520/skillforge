@@ -1,0 +1,14 @@
+project_id: example_ai_report_dashboard
+name: AI报告看板示例
+version: 1.0.0
+kind: web_static
+description: 一个上传后即可在平台项目页点击运行的部门 AI 报告网页；输入、AI能力调用、输出报告和待办全部走 Project Gateway。
+department: AI小组
+visibility: department
+entry: web/index.html
+capabilities:
+  - ai.generate
+outputs:
+  reports: true
+  todos: true
+  proofs: true

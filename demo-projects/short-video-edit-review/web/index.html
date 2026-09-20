@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>内容电商剪辑复盘 Demo</title>
+  <script src="/project-gateway-sdk.js"></script>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f7f4ef; color: #1f211c; }
+    main { max-width: 1220px; margin: 0 auto; padding: 24px; }
+    header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: start; padding-bottom: 16px; border-bottom: 1px solid #dfd8cc; }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0; }
+    .sub { margin: 0; max-width: 780px; color: #6a6459; line-height: 1.65; }
+    .badge { border: 1px solid #d8c5a3; background: #fff4dc; color: #705120; border-radius: 999px; padding: 7px 11px; font-size: 13px; white-space: nowrap; }
+    .layout { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 16px; margin-top: 18px; }
+    section, aside { border: 1px solid #dfd8cc; background: #fff; border-radius: 8px; padding: 16px; }
+    h2 { margin: 0 0 12px; font-size: 17px; }
+    label { display: grid; gap: 6px; margin-bottom: 11px; font-size: 13px; color: #6a6459; }
+    input, select, textarea { width: 100%; border: 1px solid #d5ccbd; border-radius: 7px; padding: 10px 11px; background: #fffdf8; color: #1f211c; font: inherit; }
+    textarea { min-height: 84px; resize: vertical; }
+    .file-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .file-card { border: 1px solid #e5ded2; background: #fffaf0; border-radius: 8px; padding: 12px; }
+    .file-card strong { display: block; margin-bottom: 9px; color: #3b3326; }
+    .matrix { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+    .metric { padding: 10px; border-radius: 8px; background: #f5f0e7; color: #50483c; min-height: 76px; }
+    .metric b { display: block; margin-bottom: 6px; color: #1f211c; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    button { border: 0; border-radius: 7px; padding: 10px 14px; background: #8a5b18; color: #fff; font-weight: 700; cursor: pointer; }
+    button.secondary { background: #f1e5cf; color: #795111; }
+    pre { min-height: 300px; margin: 14px 0 0; padding: 14px; overflow: auto; border-radius: 8px; background: #17130e; color: #ffe8ba; white-space: pre-wrap; line-height: 1.55; }
+    .hint { color: #6a6459; font-size: 13px; line-height: 1.6; margin-top: 12px; }
+    @media (max-width: 960px) { header, .layout { grid-template-columns: 1fr; } .file-grid, .matrix { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>内容电商剪辑复盘 Demo</h1>
+        <p class="sub">用 sf 暴露的短视频分析标准构建：不让前端预设分数，上传素材 A/B 与关键帧，由平台 AI 诊断钩子、商品露出、节奏密度、卖点证据和行动引导。</p>
+      </div>
+      <div id="mode" class="badge">离线预览</div>
+    </header>
+
+    <div class="layout">
+      <aside>
+        <h2>商品与场景</h2>
+        <label>商品卖点
+          <textarea id="sellingPoints">轻薄、舒适、安心防护；目标是让用户在前 5 秒理解商品差异。</textarea>
+        </label>
+        <label>目标人群
+          <input id="audience" value="内容电商直播间外溢人群 / 新客" />
+        </label>
+        <label>平台场景
+          <select id="scene">
+            <option>抖音信息流</option>
+            <option>小红书种草</option>
+            <option>天猫站内短视频</option>
+          </select>
+        </label>
+        <label>投放数据摘要
+          <textarea id="dataSummary">A 版完播率 18%，点击率 2.9%，加购率 3.0%；B 版完播率 24%，点击率 2.4%，加购率 4.2%。</textarea>
+        </label>
+        <div class="hint">离线打开时可看页面和模拟结论；上传到 SkillForge 项目页后会走 Project Gateway。</div>
+      </aside>
+
+      <section>
+        <h2>素材与剪辑诊断</h2>
+        <div class="file-grid">
+          <div class="file-card"><strong>投放数据</strong><input id="dataFile" type="file" accept=".csv,.xlsx,.xls,.json,.txt" /></div>
+          <div class="file-card"><strong>素材 A</strong><input id="videoA" type="file" accept="video/*" /></div>
+          <div class="file-card"><strong>素材 B</strong><input id="videoB" type="file" accept="video/*" /></div>
+        </div>
+        <div class="matrix">
+          <div class="metric"><b>首屏钩子</b>前 3 秒是否形成停留理由</div>
+          <div class="metric"><b>商品露出</b>用户是否看清商品和使用场景</div>
+          <div class="metric"><b>节奏密度</b>信息切换是否足够紧凑</div>
+          <div class="metric"><b>卖点证据</b>是否有可见证据而非口播空泛</div>
+          <div class="metric"><b>行动引导</b>是否给出明确下一步</div>
+        </div>
+        <div class="actions">
+          <button id="review">生成剪辑复盘</button>
+          <button id="clear" class="secondary">清空日志</button>
+        </div>
+        <p class="hint">运行时会上传 original_video 与 visual_frame；metadata 使用 role/material_role/video_role=material_a|material_b，关键帧带 frame_time/frame_label/source_file。源码含 uploadAsset 标准文本。</p>
+        <pre id="log">等待操作...</pre>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const gateway = window.PlatformProjectGateway || null
+    const modeEl = document.getElementById('mode')
+    const logEl = document.getElementById('log')
+    let ctx = null
+
+    function show(value) {
+      logEl.textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2)
+    }
+
+    function append(line) {
+      logEl.textContent = (logEl.textContent ? logEl.textContent + '\n' : '') + line
+    }
+
+    function gatewayReady() {
+      return gateway && gateway.gatewayAvailable && gateway.gatewayAvailable()
+    }
+
+    function currentInput() {
+      const dataFile = document.getElementById('dataFile').files[0]
+      const videoA = document.getElementById('videoA').files[0]
+      const videoB = document.getElementById('videoB').files[0]
+      return {
+        scenario: 'edit_review',
+        scene: document.getElementById('scene').value,
+        audience: document.getElementById('audience').value,
+        selling_points: document.getElementById('sellingPoints').value,
+        data_summary: document.getElementById('dataSummary').value,
+        data_file: dataFile && dataFile.name,
+        material_a: { role: 'material_a', file_name: videoA && videoA.name },
+        material_b: { role: 'material_b', file_name: videoB && videoB.name },
+        diagnostic_dimensions: ['首屏钩子', '商品露出', '节奏密度', '卖点证据', '行动引导']
+      }
+    }
+
+    async function seekFrame(video, seconds, label) {
+      return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas')
+        video.onseeked = () => {
+          canvas.width = Math.min(video.videoWidth || 720, 720)
+          canvas.height = Math.max(1, Math.round(canvas.width * ((video.videoHeight || 1280) / (video.videoWidth || 720))))
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+          canvas.toBlob(blob => blob ? resolve({ blob, seconds, label }) : reject(new Error('关键帧生成失败')), 'image/jpeg', 0.8)
+        }
+        video.onerror = () => reject(new Error('视频解码失败'))
+        video.currentTime = Math.min(Math.max(seconds, 0), Math.max((video.duration || 1) - 0.1, 0))
+      })
+    }
+
+    async function extractFrames(file) {
+      if (!file) return []
+      const url = URL.createObjectURL(file)
+      const video = document.createElement('video')
+      video.muted = true
+      video.preload = 'metadata'
+      video.src = url
+      await new Promise((resolve, reject) => {
+        video.onloadedmetadata = resolve
+        video.onerror = () => reject(new Error('无法读取视频元信息'))
+      })
+      const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 3
+      const points = [
+        { seconds: Math.min(0.6, duration * 0.1), label: 'opening' },
+        { seconds: duration * 0.35, label: 'hook_to_product' },
+        { seconds: duration * 0.66, label: 'proof' },
+        { seconds: Math.max(duration - 0.6, duration * 0.86), label: 'ending' }
+      ]
+      const frames = []
+      for (const point of points) frames.push(await seekFrame(video, point.seconds, point.label))
+      URL.revokeObjectURL(url)
+      return frames
+    }
+
+    async function uploadFileAsset(file, metadata) {
+      if (!file || !gatewayReady()) return { skipped: true, metadata }
+      return gateway.assets.upload({ file, metadata }, { timeoutMs: 180000 })
+    }
+
+    async function uploadVisualEvidence(file, role) {
+      const results = []
+      if (!file) return results
+      results.push(await uploadFileAsset(file, { source: 'sf_demo_edit_review', role, material_role: role, video_role: role, asset_type: 'original_video' }))
+      const frames = await extractFrames(file)
+      for (const frame of frames) {
+        const frameFile = new File([frame.blob], `${role}-${frame.label}.jpg`, { type: 'image/jpeg' })
+        results.push(await uploadFileAsset(frameFile, {
+          source: 'sf_demo_edit_review',
+          role,
+          material_role: role,
+          asset_type: 'visual_frame',
+          visual_frame: true,
+          frame_time: Number(frame.seconds.toFixed(2)),
+          frame_label: frame.label,
+          source_file: file.name
+        }))
+      }
+      return results
+    }
+
+    function localReview(input) {
+      return {
+        summary: '离线预览：B 版更适合做下一版主结构，A 版开场可被拆出复用。',
+        edit_actions: [
+          '0-3 秒使用 A 的高密度钩子，但提前 1 秒露出商品。',
+          '4-12 秒保留 B 的商品证据，增加近景和场景切换。',
+          '结尾补一个明确购买/进店动作，减少空泛口播。'
+        ],
+        missing_data: ['分秒级完播', '首屏停留', '点击后加购成本'],
+        confidence: 'medium',
+        input
+      }
+    }
+
+    async function runReview() {
+      const input = currentInput()
+      const dataFile = document.getElementById('dataFile').files[0]
+      const videoA = document.getElementById('videoA').files[0]
+      const videoB = document.getElementById('videoB').files[0]
+      show('开始剪辑复盘...')
+      if (!gatewayReady()) {
+        show({ mode: 'offline_preview', result: localReview(input) })
+        return
+      }
+      await gateway.input({ input, metadata: { source: 'sf_demo_edit_review_input' } })
+      append('已记录复盘输入。')
+      await uploadFileAsset(dataFile, { source: 'sf_demo_edit_review', role: 'campaign_data', asset_type: 'data_file' })
+      append('已上传投放数据。')
+      const uploadedA = await uploadVisualEvidence(videoA, 'material_a')
+      const uploadedB = await uploadVisualEvidence(videoB, 'material_b')
+      append(`已上传视觉证据：A ${uploadedA.length} 个，B ${uploadedB.length} 个。`)
+      const ai = await gateway.analyze({
+        request_id: 'sf-demo-edit-review-analyze',
+        input,
+        prompt: '请按首屏钩子、商品露出、节奏密度、卖点证据、行动引导诊断两版短视频，并输出下一版剪辑动作。'
+      })
+      const output = {
+        summary: '剪辑复盘已生成，详见平台 AI 结论。',
+        ai_result: ai,
+        input,
+        required_sections: ['素材差异归因', '剪辑改版点', '首屏/中段/收尾动作建议', '需要补拍/补采的素材和数据']
+      }
+      const ingest = await gateway.ingest({
+        output,
+        reports: [{ title: '内容电商剪辑复盘 Demo', summary: output.summary, payload: output }],
+        todos: [{ title: '制作下一版短视频剪辑脚本', priority: 'high', owner_department: '示例品牌内容电商运营部' }],
+        proofs: [{ source: 'sf_demo_edit_review', dimensions: input.diagnostic_dimensions, evidence: 'original_video + visual_frame fallback metadata uploaded' }]
+      })
+      show({ action: 'completed', analyze: ai, ingest })
+    }
+
+    async function boot() {
+      if (gatewayReady()) {
+        ctx = await gateway.ready()
+        gateway.startHeartbeat({ intervalMs: 25000, payload: { page: 'short-video-edit-review-demo' } })
+        modeEl.textContent = 'Project Gateway 已连接'
+        show({ ready: true, project: ctx.project, capabilities: gateway.capabilities(), limits: gateway.limits() })
+      }
+      document.getElementById('review').onclick = () => runReview().catch(error => show({ error: String(error && (error.message || error)) }))
+      document.getElementById('clear').onclick = () => show('')
+    }
+
+    boot().catch(error => show({ boot_error: String(error && (error.message || error)) }))
+  </script>
+</body>
+</html>

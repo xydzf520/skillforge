@@ -1,0 +1,42 @@
+.cloud-card {
+  display: flex;
+  min-height: 118px;
+  flex-direction: column;
+}
+
+.cloud-card strong {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cloud-card span {
+  line-height: 1.55;
+}
+
+.cloud-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.cloud-card footer small {
+  color: var(--subtle);
+}
+
+.cloud-import {
+  width: auto;
+  padding: 7px 10px;
+  border-color: rgba(215, 255, 57, .36);
+  background: rgba(215, 255, 57, .08);
+  color: var(--acid);
+}
+
+.cloud-import:hover {
+  background: rgba(215, 255, 57, .15);
+}

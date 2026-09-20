@@ -1,0 +1,11 @@
+# Deployed as ComfyUI-app/extra_model_paths.yaml on the dedicated RTX 5080 node.
+# The model store is shared in-place so Bridge/ComfyUI never duplicates the
+# roughly 42 GB MiniMax H3 payload.
+minimax_h3:
+  base_path: /opt/comfyui/models
+  is_default: true
+  checkpoints: checkpoints/
+  text_encoders: text_encoders/
+  diffusion_models: diffusion_models/
+  vae: vae/
+  audio_encoders: audio_encoders/

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EmailPayload",
+  "type": "object",
+  "required": ["subject", "body"],
+  "properties": {
+    "subject": { "type": "string" },
+    "body": { "type": "string" },
+    "attachments": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

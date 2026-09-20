@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/brand/mark.svg" />
+    <title>SkillForge 样式检查</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module">
+      import { createApp } from 'vue'
+      import ArcoVue from '@arco-design/web-vue'
+      import '@arco-design/web-vue/dist/arco.css'
+      import './src/assets/global.css'
+      import './src/styles/variables.css'
+      import './src/styles/tone.css'
+      import './src/styles/ai-tokens.css'
+      import './src/styles/brand-theme.css'
+      import StylePreview from './src/dev/StylePreview.vue'
+      createApp(StylePreview).use(ArcoVue).mount('#app')
+    </script>
+  </body>
+</html>

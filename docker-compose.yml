@@ -1,0 +1,94 @@
+# SkillForge 本地依赖；应用启动、迁移与管理员初始化见 README。
+services:
+  postgres:
+    image: postgres:15
+    container_name: skillforge-db
+    restart: always
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-skillforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-skillforge}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: skillforge-redis
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  gitea:
+    image: gitea/gitea:latest
+    container_name: skillforge-gitea
+    restart: always
+    ports:
+      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:2222:22"
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - TZ=CST-8
+      - GITEA__database__DB_TYPE=sqlite3
+      - GITEA__server__ROOT_URL=${GITEA_ROOT_URL:-http://localhost:3000/}
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__service__DISABLE_REGISTRATION=true
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=true
+    volumes:
+      - giteadata:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  browser:
+    build: deploy/browser
+    container_name: skillforge-browser
+    restart: unless-stopped
+    # noVNC 端口仅绑定 loopback — 外部流量统一走 FastAPI 的 /api/browser/novnc/*
+    # 代理（已带 session 认证 + admin/ai_engineer 角色校验），禁止直接暴露 VNC 协议
+    ports:
+      - "127.0.0.1:6080:6080"
+      - "127.0.0.1:9222:9223"
+    volumes:
+      - browser-data:/home/chrome/data
+    environment:
+      - DISPLAY=:99
+      - LANG=zh_CN.UTF-8
+    shm_size: '2g'
+
+  browser-verify:
+    build: deploy/browser
+    container_name: skillforge-browser-verify
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9224:9223"
+    volumes:
+      - browser-verify-data:/home/chrome/data
+    environment:
+      - DISPLAY=:99
+      - LANG=zh_CN.UTF-8
+    shm_size: '2g'
+
+volumes:
+  pgdata:
+  redisdata:
+  giteadata:
+  browser-data:
+  browser-verify-data:

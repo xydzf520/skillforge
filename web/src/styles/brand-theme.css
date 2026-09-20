@@ -1,0 +1,192 @@
+/* SkillForge visual foundation. Import after legacy styles so --ai-* and
+ * --sf-* consumers share one palette; semantic states retain their meaning. */
+:root {
+  --ai-bg: #f3f6f3;
+  --ai-surface: #ffffff;
+  --ai-surface-2: #eaf0eb;
+  --ai-surface-3: #dfe8e1;
+  --ai-border: #d7e1d9;
+  --ai-border-2: #b6c8bc;
+  --ai-border-3: #8fa799;
+  --ai-ink-1: #203b31;
+  --ai-ink-2: #3e5549;
+  --ai-ink-3: #5b7164;
+  --ai-ink-4: #637b6d;
+  --ai-ink-5: #b7c9be;
+  --ai-accent: #22624d;
+  --ai-accent-ink: #1a503e;
+  --ai-accent-soft: #e5f3ea;
+  --ai-ok: #236e45;
+  --ai-ok-soft: #e5f3e9;
+  --ai-warn: #895815;
+  --ai-warn-soft: #fff2d8;
+  --ai-bad: #b23d32;
+  --ai-bad-soft: #fbece9;
+  --ai-info: #265d88;
+  --ai-info-soft: #e8f1fa;
+  --sf-brand-action: #22624d;
+  --sf-brand-action-hover: #194f3d;
+  --sf-on-action: #ffffff;
+  --sf-focus-ring: #338767;
+  --sf-focus-soft: rgba(51, 135, 103, .18);
+  --sf-control-radius: 8px;
+  --sf-panel-radius: 12px;
+  --ai-radius-s: 6px;
+  --ai-radius: 8px;
+  --ai-radius-l: 12px;
+  --ai-shadow-1: 0 1px 3px rgba(23, 52, 37, .04);
+  --ai-shadow-2: 0 8px 24px rgba(23, 52, 37, .07);
+  --sf-danger-solid: #b23d32;
+  --sf-danger-hover: #962f26;
+  --sf-warning-solid: #895815;
+  --sf-warning-hover: #71460f;
+  --sf-success-solid: #236e45;
+  --sf-success-hover: #195735;
+}
+
+body[arco-theme='dark'] {
+  --primary-1: 21, 45, 33;
+  --primary-2: 32, 62, 48;
+  --primary-3: 42, 85, 64;
+  --primary-4: 56, 119, 87;
+  --primary-5: 88, 183, 142;
+  --primary-6: 119, 227, 188;
+  --primary-7: 160, 237, 207;
+  --primary-8: 191, 244, 223;
+  --primary-9: 217, 250, 236;
+  --primary-10: 240, 255, 249;
+  --ai-bg: #101d18;
+  --ai-surface: #172621;
+  --ai-surface-2: #21372b;
+  --ai-surface-3: #2d4437;
+  --ai-border: #3b5546;
+  --ai-border-2: #597665;
+  --ai-border-3: #779681;
+  --ai-ink-1: #edf5ef;
+  --ai-ink-2: #ceded3;
+  --ai-ink-3: #b1c8b9;
+  --ai-ink-4: #a1bdac;
+  --ai-ink-5: #587665;
+  --ai-accent: #91e4bf;
+  --ai-accent-ink: #a8efcf;
+  --ai-accent-soft: #203e30;
+  --ai-ok: #94d9a9;
+  --ai-ok-soft: #203c2c;
+  --ai-warn: #f0c378;
+  --ai-warn-soft: #43371f;
+  --ai-bad: #ffa798;
+  --ai-bad-soft: #432c29;
+  --ai-info: #a0ceee;
+  --ai-info-soft: #20394a;
+  --sf-brand-action: #77e3bc;
+  --sf-brand-action-hover: #a0edcf;
+  --sf-on-action: #12352a;
+  --sf-focus-ring: #77e3bc;
+  --sf-focus-soft: rgba(119, 227, 188, .2);
+  --ai-shadow-1: none;
+  --ai-shadow-2: 0 8px 24px rgba(0, 0, 0, .18);
+}
+
+/* Resolve aliases on body, not :root: otherwise dark-mode descendants would
+ * inherit the already-resolved light values of the old --sf-* variables. */
+body {
+  --primary-1: 238, 247, 240;
+  --primary-2: 221, 240, 229;
+  --primary-3: 189, 225, 205;
+  --primary-4: 136, 196, 163;
+  --primary-5: 65, 138, 105;
+  --primary-6: 34, 98, 77;
+  --primary-7: 25, 79, 61;
+  --primary-8: 18, 61, 55;
+  --primary-9: 13, 47, 39;
+  --primary-10: 8, 32, 26;
+}
+body, body[arco-theme='dark'] {
+  --sf-ink-1: var(--ai-ink-1);
+  --sf-ink-2: var(--ai-ink-2);
+  --sf-ink-3: var(--ai-ink-3);
+  --sf-paper: var(--ai-bg);
+  --sf-surface: var(--ai-surface);
+  --sf-panel: var(--ai-surface-2);
+  --sf-line: var(--ai-border);
+  --sf-font-sans: var(--ai-font-sans);
+  --sf-font-mono: var(--ai-font-mono);
+  --sf-shadow-sm: var(--ai-shadow-1);
+  --sf-shadow-md: var(--ai-shadow-2);
+  --sf-radius-xs: 4px;
+  --sf-radius-sm: 6px;
+  --sf-radius-md: var(--sf-control-radius);
+  --sf-radius-lg: var(--sf-panel-radius);
+  --border-radius-small: var(--sf-radius-sm);
+  --border-radius-medium: var(--sf-radius-md);
+  --border-radius-large: var(--sf-radius-lg);
+  --sf-tone-brand-fg: var(--ai-accent);
+  --sf-tone-brand-bg: var(--ai-accent-soft);
+  --sf-tone-brand-border: var(--ai-border-2);
+  --sf-tone-success-fg: var(--ai-ok);
+  --sf-tone-success-bg: var(--ai-ok-soft);
+  --sf-tone-success-border: color-mix(in srgb, var(--ai-ok) 30%, transparent);
+  --sf-tone-warning-fg: var(--ai-warn);
+  --sf-tone-warning-bg: var(--ai-warn-soft);
+  --sf-tone-warning-border: color-mix(in srgb, var(--ai-warn) 30%, transparent);
+  --sf-tone-danger-fg: var(--ai-bad);
+  --sf-tone-danger-bg: var(--ai-bad-soft);
+  --sf-tone-danger-border: color-mix(in srgb, var(--ai-bad) 30%, transparent);
+  --sf-tone-info-fg: var(--ai-info);
+  --sf-tone-info-bg: var(--ai-info-soft);
+  --sf-tone-info-border: color-mix(in srgb, var(--ai-info) 30%, transparent);
+  --sf-tone-neutral-fg: var(--ai-ink-3);
+  --sf-tone-neutral-bg: var(--ai-surface-2);
+  --sf-tone-neutral-border: var(--ai-border);
+  /* Keep gradient-valued compatibility for background-image/text-mask callers. */
+  --sf-gradient-primary: linear-gradient(var(--sf-brand-action), var(--sf-brand-action));
+  --sf-gradient-ai: linear-gradient(var(--ai-accent), var(--ai-accent));
+  --sf-gradient-ai-soft: linear-gradient(var(--ai-accent-soft), var(--ai-accent-soft));
+  --sf-gradient-ai-border: linear-gradient(var(--ai-border-2), var(--ai-border-2));
+  --sf-gradient-ai-text: linear-gradient(var(--ai-accent), var(--ai-accent));
+  background: var(--ai-bg);
+  color: var(--ai-ink-1);
+}
+
+/* Shared action states apply equally in pages, modals and drawers. Local
+ * status assignments change only their own buttons, never the whole panel. */
+:is(.arco-btn-primary, .arco-modal-footer .arco-btn-primary, .arco-drawer-footer .arco-btn-primary) {
+  --sf-button-bg: var(--sf-brand-action);
+  --sf-button-hover: var(--sf-brand-action-hover);
+  --sf-button-fg: var(--sf-on-action);
+  background: var(--sf-button-bg) !important;
+  border-color: var(--sf-button-bg) !important;
+  color: var(--sf-button-fg) !important;
+  background-image: none !important;
+  border-radius: var(--sf-control-radius);
+}
+.arco-btn-primary.arco-btn-status-danger { --sf-button-bg: var(--sf-danger-solid); --sf-button-hover: var(--sf-danger-hover); --sf-button-fg: #fff; }
+.arco-btn-primary.arco-btn-status-warning { --sf-button-bg: var(--sf-warning-solid); --sf-button-hover: var(--sf-warning-hover); --sf-button-fg: #fff; }
+.arco-btn-primary.arco-btn-status-success { --sf-button-bg: var(--sf-success-solid); --sf-button-hover: var(--sf-success-hover); --sf-button-fg: #fff; }
+:is(.arco-btn-primary, .arco-modal-footer .arco-btn-primary, .arco-drawer-footer .arco-btn-primary):hover:not(:disabled):not(.arco-btn-disabled) {
+  background: var(--sf-button-hover) !important;
+  border-color: var(--sf-button-hover) !important;
+  color: var(--sf-button-fg) !important;
+}
+:is(.arco-btn-primary, .arco-modal-footer .arco-btn-primary, .arco-drawer-footer .arco-btn-primary):is(:disabled, .arco-btn-disabled) {
+  background: var(--ai-surface-3) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-ink-4) !important;
+  opacity: .75;
+}
+.arco-btn:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--sf-focus-ring);
+  outline-offset: 3px;
+}
+.arco-input-wrapper:focus-within, .arco-textarea-wrapper:focus-within, .arco-select-view.arco-select-view-focus {
+  border-color: var(--sf-focus-ring) !important;
+  box-shadow: 0 0 0 3px var(--sf-focus-soft) !important;
+}
+.arco-btn, .arco-input-wrapper, .arco-textarea-wrapper, .arco-select-view {
+  border-radius: var(--sf-control-radius) !important;
+}
+.arco-modal, .arco-drawer-content, .arco-card, .auth-panel { border-color: var(--ai-border); }
+.arco-modal, .arco-card { border-radius: var(--sf-panel-radius); }
+.ai-avatar { background: var(--ai-accent-soft); color: var(--ai-accent); }
+body[arco-theme='dark'] .top-bar { background: var(--ai-surface) !important; }
+body[arco-theme='dark'] .auth-panel, body[arco-theme='dark'] .auth-brand-panel { background: var(--ai-surface); }

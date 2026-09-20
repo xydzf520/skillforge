@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">SkillForge</title>
+  <desc id="desc">A geometric SK monogram on a deep green square.</desc>
+  <rect width="64" height="64" rx="16" fill="#123D37"/>
+  <g transform="translate(-2 0) scale(.625 1)">
+    <path d="M22 16H48L40 24H24V28H40L48 36V42L42 48H16L24 40H40V36H24L16 28V22Z" fill="#F4FBF8"/>
+    <path d="M22 16H48L40 24H16V22Z" fill="#77E3BC"/>
+  </g>
+  <path d="M34 16H40V28L49 16H57L44 32L57 48H49L40 36V48H34Z" fill="#F4FBF8"/>
+</svg>

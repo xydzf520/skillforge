@@ -1,0 +1,189 @@
+/* 收件卡片：设计稿 ai-card + 左侧 status accent 色条
+ * 改自原 task-tree Instance 风格 → 设计稿 Crisp Mono 密集风格。
+ */
+.sf-inbox-card {
+  --inbox-card-radius: 8px;
+  --inbox-card-padding: 14px;
+  --inbox-card-accent: var(--ai-border-2);
+  --inbox-card-shadow: none;
+  --inbox-card-shadow-hover: var(--ai-shadow-2);
+  --inbox-card-title-size: 13.5px;
+  --inbox-card-title-weight: 600;
+  --inbox-card-summary-size: 12.5px;
+  --inbox-card-meta-size: 11.5px;
+
+  position: relative;
+  border: 1px solid var(--ai-border);
+  border-radius: var(--inbox-card-radius);
+  background: var(--ai-surface);
+  box-shadow: var(--inbox-card-shadow);
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--ai-font-sans);
+  color: var(--ai-ink-1);
+}
+
+/* 左侧 3px status 色条（设计稿样式：更细更克制） */
+.sf-inbox-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--inbox-card-accent);
+  border-top-left-radius: var(--inbox-card-radius);
+  border-bottom-left-radius: var(--inbox-card-radius);
+}
+
+.sf-inbox-card:hover {
+  border-color: var(--ai-border-2);
+  box-shadow: var(--inbox-card-shadow-hover);
+}
+
+/* 按状态上色（TodoCard 传 status-* class） */
+.sf-inbox-card.status-pending {
+  --inbox-card-accent: var(--ai-warn);
+}
+.sf-inbox-card.status-approved {
+  --inbox-card-accent: var(--ai-ok);
+}
+.sf-inbox-card.status-rejected {
+  --inbox-card-accent: var(--ai-bad);
+}
+.sf-inbox-card.status-expired {
+  --inbox-card-accent: var(--ai-ink-5);
+}
+.sf-inbox-card.status-resolved_by_peer {
+  --inbox-card-accent: var(--ai-accent);
+}
+/* DispatchCard 用 dispatch-* */
+.sf-inbox-card.dispatch-sent {
+  --inbox-card-accent: var(--ai-accent);
+}
+.sf-inbox-card.dispatch-pushed_no_dingtalk {
+  --inbox-card-accent: var(--ai-warn);
+}
+.sf-inbox-card.dispatch-done {
+  --inbox-card-accent: var(--ai-ok);
+}
+.sf-inbox-card.dispatch-cancelled {
+  --inbox-card-accent: var(--ai-ink-5);
+}
+
+.sf-inbox-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.sf-inbox-title-stack {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sf-inbox-title {
+  margin: 0;
+  color: var(--ai-ink-1);
+  font-size: var(--inbox-card-title-size);
+  font-weight: var(--inbox-card-title-weight);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+.sf-inbox-summary {
+  color: var(--ai-ink-3);
+  font-size: var(--inbox-card-summary-size);
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.sf-inbox-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sf-inbox-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 8px;
+  color: var(--ai-ink-4);
+  font-size: var(--inbox-card-meta-size);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.sf-inbox-clamp-2,
+.sf-inbox-clamp-3 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.sf-inbox-clamp-2 {
+  -webkit-line-clamp: 2;
+}
+
+.sf-inbox-clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+/* Arco a-tag 在 inbox 卡内统一改成设计稿 .ai-pill 视觉 */
+.sf-inbox-card .arco-tag {
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1;
+  border: 1px solid var(--ai-border);
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-2);
+}
+.sf-inbox-card .arco-tag-color-gray,
+.sf-inbox-card .arco-tag-color-grey {
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-2);
+  border: 1px solid var(--ai-border);
+}
+.sf-inbox-card .arco-tag-color-arcoblue {
+  background: var(--ai-accent-soft);
+  color: var(--ai-accent-ink);
+  border-color: transparent;
+}
+.sf-inbox-card .arco-tag-color-red {
+  background: var(--ai-bad-soft);
+  color: var(--ai-bad);
+  border-color: transparent;
+}
+.sf-inbox-card .arco-tag-color-orange,
+.sf-inbox-card .arco-tag-color-orangered,
+.sf-inbox-card .arco-tag-color-gold {
+  background: var(--ai-warn-soft);
+  color: var(--ai-warn);
+  border-color: transparent;
+}
+.sf-inbox-card .arco-tag-color-green {
+  background: var(--ai-ok-soft);
+  color: var(--ai-ok);
+  border-color: transparent;
+}
+.sf-inbox-card .arco-tag-color-blue,
+.sf-inbox-card .arco-tag-color-cyan {
+  background: var(--ai-info-soft);
+  color: var(--ai-info);
+  border-color: transparent;
+}
+.sf-inbox-card .arco-tag-color-purple,
+.sf-inbox-card .arco-tag-color-magenta,
+.sf-inbox-card .arco-tag-color-pinkpurple {
+  background: var(--ai-surface-2);
+  color: var(--ai-ink-2);
+  border-color: var(--ai-border);
+}

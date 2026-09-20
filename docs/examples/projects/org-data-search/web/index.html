@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>组织数据查询示例</title>
+  <script src="/project-gateway-sdk.js"></script>
+  <style>
+    :root { font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; color: #172033; }
+    body { margin: 0; background: #f7f9fc; }
+    main { max-width: 920px; margin: 0 auto; padding: 30px; }
+    .panel { border: 1px solid #dfe6f3; border-radius: 22px; background: #fff; padding: 24px; box-shadow: 0 18px 40px rgba(23, 32, 51, .07); }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    p { color: #5f6f8f; line-height: 1.7; }
+    .bar { display: grid; grid-template-columns: 1fr 120px auto; gap: 10px; margin: 18px 0; }
+    input { height: 42px; border: 1px solid #cbd6ea; border-radius: 12px; padding: 0 12px; }
+    button { border: 0; border-radius: 12px; padding: 0 18px; color: #fff; background: #0f9f6e; font-weight: 700; cursor: pointer; }
+    button.secondary { color: #0f9f6e; background: #e3f7ef; }
+    pre { min-height: 260px; margin: 18px 0 0; padding: 16px; overflow: auto; border-radius: 16px; background: #0f172a; color: #d8f8eb; white-space: pre-wrap; }
+    .note { padding: 12px 14px; border-radius: 14px; background: #edf7ff; color: #41607e; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel">
+      <h1>组织数据查询示例</h1>
+      <p>用于演示网页项目如何调用平台已授权的只读 MCP 数据能力。数据能力调用、输入、输出报告和 proof 都会写入项目运行轨迹。</p>
+      <div class="bar">
+        <input id="keyword" value="项目数据用户" placeholder="输入姓名、账号或部门" />
+        <input id="limit" value="5" />
+        <button id="search">查询组织数据</button>
+      </div>
+      <button id="submit" class="secondary">回传查询报告</button>
+      <p class="note">能力声明：mcp://skillforge_org_search_users；调用凭据、权限判断和结果审计均由平台完成。</p>
+      <pre id="log">正在等待平台运行上下文...</pre>
+    </section>
+  </main>
+  <script>
+    const gateway = window.PlatformProjectGateway
+    const logEl = document.getElementById('log')
+    let ctx = null
+    let lastResult = null
+
+    function queryInput() {
+      return {
+        query: document.getElementById('keyword').value,
+        limit: Number(document.getElementById('limit').value || 5),
+        page: 'org-data-search'
+      }
+    }
+
+    function show(value) {
+      logEl.textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2)
+    }
+
+    async function searchOrg() {
+      const input = queryInput()
+      await gateway.input({ input, metadata: { example: 'org-data-search' } })
+      lastResult = await gateway.capability({
+        capability: 'mcp://skillforge_org_search_users',
+        input
+      })
+      show({ action: 'mcp_data_called', result: lastResult })
+      return lastResult
+    }
+
+    async function submitReport() {
+      if (!lastResult) await searchOrg()
+      const data = (lastResult && lastResult.result && lastResult.result.data) || { count: 0, items: [] }
+      const proof = (lastResult && lastResult.result && lastResult.result.proof) || {}
+      const result = await gateway.ingest({
+        auto_analyze: false,
+        output: { summary: '组织数据查询完成，共返回 ' + (data.count || 0) + ' 条记录。', data },
+        reports: [{ title: '组织数据查询报告示例', summary: '返回 ' + (data.count || 0) + ' 条组织成员记录。' }],
+        proofs: [proof]
+      })
+      show({ action: 'org_report_ingested', result })
+      return result
+    }
+
+    async function boot() {
+      ctx = await gateway.ready()
+      gateway.startHeartbeat({ intervalMs: 25000, payload: { page: 'org-data-search' } })
+      show({ ready: true, project: ctx.project, capabilities: gateway.capabilities(), limits: gateway.limits() })
+      document.getElementById('search').onclick = () => searchOrg().catch(show)
+      document.getElementById('submit').onclick = () => submitReport().catch(show)
+    }
+
+    boot().catch(show)
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+# Standalone preview. Credentials are supplied by a private .env beside this file.
+name: skillforge-preview
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: skillforge
+      POSTGRES_USER: skillforge
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a unique database password}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U skillforge -d skillforge']
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    logging: &logging
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: [redis-server, --appendonly, "yes", --maxmemory, 128mb, --maxmemory-policy, allkeys-lru]
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    logging: *logging
+
+  app:
+    image: skillforge-public:${SKILLFORGE_RELEASE_SHA:?Set the source revision}
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+      args:
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://deb.debian.org}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://skillforge:${POSTGRES_PASSWORD}@db:5432/skillforge
+      DATABASE_URL_SYNC: postgresql+psycopg2://skillforge:${POSTGRES_PASSWORD}@db:5432/skillforge
+      REDIS_URL: redis://redis:6379/0
+      SKILL_REPO_PATH: /app/skills-repo
+      SKILL_REPO_CANONICAL_REMOTE: /app/skill-remote.git
+      SKILLFORGE_SERVICE_AUTOREGISTER: "0"
+      BROWSER_HEARTBEAT_ENABLED: "false"
+      LEARNING_AUTO_FLOW_ENABLED: "false"
+      TRAINING_COLLECT_DUE_ENABLED: "false"
+      TRAINING_AUTOMATION_ENABLED: "false"
+      LEARNING_AUTO_TRAINING_ENABLED: "false"
+      LEARNING_AUTO_TRAINING_DISPATCH_ENABLED: "false"
+      LEARNING_AUTO_DEPLOYMENT_APPROVE_ENABLED: "false"
+    ports:
+      - ${PREVIEW_BIND:-127.0.0.1}:${PREVIEW_PORT:-18082}:8000
+    volumes:
+      - assets:/app/data
+      - skills:/app/skills-repo
+      - skill-remote:/app/skill-remote.git
+    depends_on:
+      db: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+      interval: 20s
+      timeout: 8s
+      retries: 5
+      start_period: 90s
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    logging: *logging
+
+volumes:
+  postgres:
+  redis:
+  assets:
+  skills:
+  skill-remote:

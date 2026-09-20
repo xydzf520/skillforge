@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskContract",
+  "type": "object",
+  "required": ["goal", "trigger", "input", "output", "permissions", "risks"],
+  "properties": {
+    "goal": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": ["manual", "cron", "webhook", "event"]
+        },
+        "expression": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "input": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "source", "required"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "enum": ["string", "number", "date", "json"] },
+          "source": { "enum": ["user", "datasource", "previous_skill"] },
+          "required": { "type": "boolean" }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["adapter"],
+      "properties": {
+        "adapter": {
+          "enum": ["dingtalk_card", "email", "slack", "json_webhook", "csv_file"]
+        },
+        "schema": {
+          "type": "object"
+        },
+        "recipient": {
+          "type": "string"
+        }
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["action", "target", "reversible"],
+        "properties": {
+          "action": { "enum": ["read_data", "write_data", "send_message", "external_api"] },
+          "target": { "type": "string" },
+          "reversible": { "type": "boolean" }
+        }
+      }
+    },
+    "risks": {
+      "type": "object",
+      "required": ["level", "data_classification", "department"],
+      "properties": {
+        "level": { "enum": ["R1", "R2", "R3"] },
+        "data_classification": { "enum": ["public", "internal", "confidential"] },
+        "department": { "type": "string" }
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "test_cases": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["name", "input", "expected_keywords"],
+        "properties": {
+          "name": { "type": "string" },
+          "input": { "type": "object" },
+          "expected_keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

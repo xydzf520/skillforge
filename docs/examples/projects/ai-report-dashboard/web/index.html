@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI报告看板示例</title>
+  <script src="/project-gateway-sdk.js"></script>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    body { margin: 0; background: #f5f7fb; color: #172033; }
+    main { max-width: 980px; margin: 0 auto; padding: 28px; }
+    .hero { border: 1px solid #dfe6f3; border-radius: 22px; padding: 24px; background: linear-gradient(135deg, #ffffff, #eef4ff); box-shadow: 0 18px 45px rgba(23, 32, 51, .08); }
+    .eyebrow { color: #315eea; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 10px 0 8px; font-size: 30px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { padding: 16px; border: 1px solid #dfe6f3; border-radius: 16px; background: #fff; }
+    label { display: grid; gap: 6px; font-size: 13px; color: #5f6f8f; }
+    input, select { height: 38px; border: 1px solid #cbd6ea; border-radius: 10px; padding: 0 12px; color: #172033; background: #fff; }
+    button { border: 0; border-radius: 12px; padding: 11px 15px; color: #fff; background: #315eea; font-weight: 700; cursor: pointer; }
+    button.secondary { color: #315eea; background: #e8efff; }
+    button.ghost { color: #5f6f8f; background: #eef2f8; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    pre { min-height: 220px; margin: 18px 0 0; padding: 16px; overflow: auto; border-radius: 16px; background: #101828; color: #d6e2ff; white-space: pre-wrap; }
+    .hint { margin-top: 14px; color: #5f6f8f; font-size: 13px; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">SkillForge Project Gateway Example</div>
+      <h1>AI报告看板示例</h1>
+      <p>模拟部门运营看板：网页内输入会记录到项目运行轨迹，AI 生成和输出回传都由平台网关代理并进入 AI 分析闭环。</p>
+      <div class="grid">
+        <label>分析周期
+          <select id="period">
+            <option value="today">今天</option>
+            <option value="recent7">近7天</option>
+            <option value="recent30">近30天</option>
+          </select>
+        </label>
+        <label>指标
+          <select id="metric">
+            <option value="conversion">转化率</option>
+            <option value="visitors">访客</option>
+            <option value="roi">投入产出比</option>
+          </select>
+        </label>
+        <label>阈值
+          <input id="threshold" value="下滑超过 10%" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="record-input" class="secondary">记录输入</button>
+        <button id="call-ai">调用平台 AI</button>
+        <button id="submit-output">回传报告和待办</button>
+        <button id="close-run" class="ghost">结束本次运行</button>
+      </div>
+      <div class="hint">所有能力调用都通过 <strong>window.PlatformProjectGateway</strong> 完成；项目页面不需要也不应保存模型凭据或业务系统凭据。</div>
+      <pre id="log">正在等待平台运行上下文...</pre>
+    </section>
+  </main>
+  <script>
+    const gateway = window.PlatformProjectGateway
+    const logEl = document.getElementById('log')
+    let ctx = null
+    let lastAiText = ''
+
+    function payload() {
+      return {
+        period: document.getElementById('period').value,
+        metric: document.getElementById('metric').value,
+        threshold: document.getElementById('threshold').value,
+        page: 'ai-report-dashboard'
+      }
+    }
+
+    function show(value) {
+      logEl.textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2)
+    }
+
+    function pickAiText(result) {
+      return (result && result.result && result.result.output) || result.output || result.text || result.summary || '平台 AI 已返回建议'
+    }
+
+    async function recordInput() {
+      const recorded = await gateway.input({ input: payload(), metadata: { example: 'ai-report-dashboard' } })
+      show({ action: 'input_recorded', recorded })
+      return recorded
+    }
+
+    async function callAi() {
+      await recordInput()
+      const result = await gateway.ai({
+        prompt: '请基于部门看板输入生成运营分析结论、风险和下一步动作。',
+        input: { project: ctx && ctx.project, filters: payload(), rows: [{ channel: 'search', visitors: 1842, conversion_drop: 0.13 }] }
+      })
+      lastAiText = pickAiText(result)
+      show({ action: 'platform_ai_called', output: lastAiText, result })
+      return result
+    }
+
+    async function submitOutput() {
+      if (!lastAiText) await callAi()
+      const filters = payload()
+      const result = await gateway.ingest({
+        output: { summary: lastAiText, filters, example: 'ai-report-dashboard' },
+        reports: [{ title: 'AI运营报告示例', summary: lastAiText, tags: ['project-example', filters.metric] }],
+        todos: [{ title: '跟进' + filters.metric + '异常', priority: 'high', owner_department: ctx && ctx.project && ctx.project.department }],
+        proofs: [{ source: 'project-example', metric: filters.metric, value: filters.threshold }]
+      })
+      show({ action: 'output_ingested', result })
+      return result
+    }
+
+    async function closeRun() {
+      const result = await gateway.close({ metadata: { source: 'ai-report-dashboard' } })
+      show({ action: 'run_closed', result })
+      return result
+    }
+
+    async function boot() {
+      ctx = await gateway.ready()
+      gateway.startHeartbeat({ intervalMs: 25000, payload: { page: 'ai-report-dashboard' } })
+      show({ ready: true, project: ctx.project, capabilities: gateway.capabilities(), limits: gateway.limits() })
+      document.getElementById('record-input').onclick = () => recordInput().catch(show)
+      document.getElementById('call-ai').onclick = () => callAi().catch(show)
+      document.getElementById('submit-output').onclick = () => submitOutput().catch(show)
+      document.getElementById('close-run').onclick = () => closeRun().catch(show)
+    }
+
+    boot().catch(show)
+  </script>
+</body>
+</html>

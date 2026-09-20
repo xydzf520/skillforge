@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+<title id="title">SkillForge</title><desc id="desc">企业 AI 工作台与技能协作平台. 让业务经验成为可复用的 AI 能力</desc>
+<rect width="1200" height="360" rx="24" fill="#F3F7F4"/>
+<path d="M810 0V360M930 0V360M1050 0V360M780 60H1200M780 180H1200M780 300H1200" stroke="#DFE9E2"/>
+<g transform="translate(58 58) scale(1.25)"><rect width="64" height="64" rx="16" fill="#123D37"/>
+  <g transform="translate(-2 0) scale(.625 1)">
+    <path d="M22 16H48L40 24H24V28H40L48 36V42L42 48H16L24 40H40V36H24L16 28V22Z" fill="#F4FBF8"/>
+    <path d="M22 16H48L40 24H16V22Z" fill="#77E3BC"/>
+  </g>
+  <path d="M34 16H40V28L49 16H57L44 32L57 48H49L40 36V48H34Z" fill="#F4FBF8"/>
+</g>
+<text x="162" y="116" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="52" font-weight="650" letter-spacing="-2.5" fill="#163D35">SkillForge</text>
+<text x="60" y="206" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="29" font-weight="550" fill="#203E36">企业 AI 工作台与技能协作平台</text>
+<text x="60" y="250" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="20" fill="#587168">让业务经验成为可复用的 AI 能力</text>
+<path d="M846 92H922L976 146V236H1118" fill="none" stroke="#C0D8CA" stroke-width="3"/>
+<rect x="815" y="61" width="62" height="62" rx="16" fill="#DFECE3"/>
+<path d="M835 80H858M835 90H850M835 100H858" stroke="#638B78" stroke-width="4" stroke-linecap="round"/>
+<g transform="translate(927 131) scale(1.55)"><rect width="64" height="64" rx="16" fill="#123D37"/>
+  <g transform="translate(-2 0) scale(.625 1)">
+    <path d="M22 16H48L40 24H24V28H40L48 36V42L42 48H16L24 40H40V36H24L16 28V22Z" fill="#F4FBF8"/>
+    <path d="M22 16H48L40 24H16V22Z" fill="#77E3BC"/>
+  </g>
+  <path d="M34 16H40V28L49 16H57L44 32L57 48H49L40 36V48H34Z" fill="#F4FBF8"/>
+</g>
+<rect x="1087" y="205" width="62" height="62" rx="16" fill="#DFECE3"/>
+<path d="M1105 236L1114 245L1132 226" fill="none" stroke="#638B78" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

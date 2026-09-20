@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "SkillForge Cookie Sync",
+  "version": "1.2.0",
+  "description": "自动同步电商平台 cookies + 捕获 API 请求上报到 SkillForge",
+  "permissions": ["cookies", "storage", "alarms", "tabs", "activeTab"],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://localhost:8000/*",
+    "http://127.0.0.1/*",
+    "http://127.0.0.1:8000/*",
+    "*://*.taobao.com/*",
+    "*://*.tmall.com/*",
+    "*://*.sycm.taobao.com/*",
+    "*://*.alimama.com/*",
+    "*://*.douyin.com/*",
+    "*://*.jinritemai.example.test/*",
+    "*://*.jd.com/*",
+    "*://*.pinduoduo.com/*",
+    "*://*.yangkeduo.com/*"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": [
+      "*://*.taobao.com/*", "*://*.tmall.com/*", "*://*.sycm.taobao.com/*",
+      "*://*.alimama.com/*",
+      "*://*.douyin.com/*", "*://*.jinritemai.example.test/*",
+      "*://*.jd.com/*", "*://*.pinduoduo.com/*"
+    ],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

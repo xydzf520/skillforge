@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>SkillForge · Cookie Sync</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 360px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; background: #f7f8fa; color: #1d2129; }
+    .header { background: #123d37; color: #f4fbf8; padding: 16px; display: flex; align-items: center; gap: 12px; }
+    .header-icon { width: 40px; height: 40px; display: block; flex-shrink: 0; }
+    .header-text h1 { font-size: 15px; font-weight: 600; }
+    .header-text p { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+    .config { padding: 12px 16px; background: white; border-bottom: 1px solid #e5e6eb; }
+    .field-label { display: block; font-size: 11px; color: #86909c; margin-bottom: 4px; font-weight: 500; }
+    .config input[type="text"], .config input[type="password"] { width: 100%; padding: 6px 10px; border: 1px solid #e5e6eb; border-radius: 4px; font-size: 12px; margin-bottom: 8px; }
+    .config input[type="text"]:focus, .config input[type="password"]:focus { outline: none; border-color: #165dff; }
+    .config-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sync-setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; margin: 2px 0 10px; border: 1px solid #c9d8ff; border-radius: 6px; background: #f3f7ff; cursor: pointer; }
+    .sync-copy { display: flex; flex-direction: column; gap: 2px; }
+    .sync-copy strong { font-size: 12px; color: #1d2129; font-weight: 600; }
+    .sync-copy small { font-size: 10px; color: #4e5969; line-height: 1.4; }
+    .switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+    .switch input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .switch-slider { position: absolute; inset: 0; border-radius: 999px; background: #c9cdd4; transition: background 0.16s ease; pointer-events: none; }
+    .switch-slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.22); transition: transform 0.16s ease; }
+    .switch input:checked + .switch-slider { background: #165dff; }
+    .switch input:checked + .switch-slider::before { transform: translateX(18px); }
+    .key-hint { font-size: 10px; color: #86909c; margin: -4px 0 8px; }
+    .btn { padding: 6px 14px; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: 500; }
+    .btn-primary { background: #165dff; color: white; }
+    .btn-primary:hover { background: #0e42d2; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-sm { padding: 4px 10px; font-size: 11px; }
+    .btn-outline { background: white; border: 1px solid #e5e6eb; color: #4e5969; }
+    .btn-outline:hover { border-color: #165dff; color: #165dff; }
+    .platforms { padding: 8px 16px; }
+    .platform { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: white; border-radius: 6px; margin-bottom: 6px; border: 1px solid #e5e6eb; }
+    .platform-info { display: flex; align-items: center; gap: 8px; }
+    .platform-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-connected { background: #00b42a; }
+    .dot-disconnected { background: #c9cdd4; }
+    .platform-name { font-weight: 500; }
+    .platform-time { font-size: 10px; color: #86909c; margin-top: 2px; }
+    .actions { padding: 12px 16px; display: flex; gap: 8px; justify-content: flex-end; }
+    .footer { padding: 8px 16px; text-align: center; font-size: 10px; color: #c9cdd4; }
+    .status-bar { padding: 8px 16px; background: #e8f3ff; font-size: 11px; color: #165dff; display: none; }
+    .status-bar.error { background: #ffece8; color: #f53f3f; }
+    .status-bar.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img class="header-icon" src="icon128.png" alt="" width="40" height="40">
+    <div class="header-text">
+      <h1>SkillForge Cookie Sync</h1>
+      <p>自动同步电商平台登录状态到 SkillForge</p>
+    </div>
+  </div>
+
+  <div id="statusBar" class="status-bar"></div>
+
+  <div class="config">
+    <label class="field-label">SkillForge 服务器地址</label>
+    <input type="text" id="serverUrl" placeholder="http://localhost:8000">
+    <label class="field-label">Connector Key <span style="color:#c9cdd4">(连接管理 → 创建个人 Key)</span></label>
+    <input type="password" id="apiKey" placeholder="粘贴新 Key；已保存则可留空">
+    <div class="key-hint" id="apiKeyHint">未保存 Key</div>
+    <label class="sync-setting" for="autoSync">
+      <span class="sync-copy">
+        <strong>自动同步 Cookie</strong>
+        <small>Cookie 变化立即同步，另每 30 分钟兜底同步</small>
+      </span>
+      <span class="switch">
+        <input type="checkbox" id="autoSync">
+        <span class="switch-slider"></span>
+      </span>
+    </label>
+    <button class="btn btn-primary btn-sm" id="saveConfig">保存配置</button>
+  </div>
+
+  <div class="platforms" id="platformList"></div>
+
+  <div class="actions">
+    <button class="btn btn-outline btn-sm" id="syncAll">同步全部 Cookies</button>
+    <button class="btn btn-primary btn-sm" id="reportApis">扫描当前页面 API</button>
+  </div>
+
+  <div id="apiResult" style="padding:0 16px;display:none">
+    <div style="font-size:11px;color:#86909c;margin-bottom:4px">捕获的 API 端点：</div>
+    <div id="apiList" style="max-height:150px;overflow-y:auto;font-family:monospace;font-size:10px;background:white;border:1px solid #e5e6eb;border-radius:4px;padding:6px"></div>
+  </div>
+
+  <div class="footer">
+    自动同步 cookies + 捕获 API 请求 · v1.2.0
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
