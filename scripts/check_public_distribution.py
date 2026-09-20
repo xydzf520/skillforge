@@ -30,7 +30,12 @@ def inspect_file(name: str, raw: bytes) -> list[tuple[int, str]]:
     if path.name.startswith('.env') and not path.name.endswith(('.example', '.template')):
         findings.append((0, "local environment file"))
     if b'\0' in raw:
-        if path.suffix.lower() not in {'.png', '.ico'}:
+        reviewed_screenshot = (
+            name.startswith('docs/screenshots/')
+            and path.suffix.lower() == '.jpg'
+            and raw.startswith(b'\xff\xd8\xff')
+        )
+        if path.suffix.lower() not in {'.png', '.ico'} and not reviewed_screenshot:
             findings.append((0, "unreviewed binary"))
         return findings
     try:

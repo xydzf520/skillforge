@@ -14,7 +14,7 @@ The value proposition is that **an investment in completing today's task also re
 
 > This is a **public preview**, published under Apache-2.0 with SK branding and an isolated deployment configuration. The [latest release review](docs/public/RELEASE_CHECK_20260920.en.md) lists passed checks and remaining full-suite failures. Source code and local validation records are available; external integrations, actual training and production deployment require separate configuration and acceptance testing. See the [release boundary](docs/public/RELEASE_BOUNDARY.md) for licensing and publication status.
 
-Read: [Enterprise value](#value) · [Product](#product) · [Use cases and value validation](#enterprise) · [Collaboration and custom Harness](#harness) · [Authoring Skills](#authoring) · [Enterprise assets](#assets) · [Data and training lifecycle](#training) · [Future and private small models](#future) · [Technology](#technology) · [Quickstart](#quickstart) · [Validation](#validation) · [About the author](#case-study)
+Read: [Enterprise value](#value) · [Our view of the future](#future) · [Author and career interests](#case-study) · [Screenshots](#screenshots) · [Product](#product) · [Use cases and value validation](#enterprise) · [Collaboration and custom Harness](#harness) · [Authoring Skills](#authoring) · [Enterprise assets](#assets) · [Data and training lifecycle](#training) · [Technology](#technology) · [Quickstart](#quickstart) · [Validation](#validation)
 
 <a id="value"></a>
 
@@ -55,7 +55,52 @@ This is a comparison of documented directions, checked against official reposito
 
 The project is positioned as an **enterprise AI capability collaboration and asset management platform**. Its open-source value should be demonstrated through reproducible business cases, accountable handoffs and verifiable improvement records. The table below and capability documentation distinguish code foundations, availability and pending acceptance. Replacement coding Harness integration and real training remain unaccepted; the project makes no claim to be the first, the only, or a complete production learning loop.
 
-### Current edition at a glance
+<a id="future"></a>
+
+## Our view of the future
+
+The following describes product direction and judgment, not completed functionality or an inevitable industry outcome.
+
+**Enterprise AI will increasingly be evaluated through tasks that can be accepted or rejected.** Beyond an answer, teams need to know which data was used, what actions were completed, where confirmation was required and how a failure can be recovered. SkillForge organizes this information around tasks, versions, tools and execution evidence.
+
+**Organizations will need capability assets that can accumulate over time.** People, models and tools may change, while validated business rules, skill versions, cases and evaluation standards remain reusable. The product aims to make these assets discoverable, composable and maintainable, reducing repeated implementation across teams.
+
+**As models become stronger, organizations need ownership of their business assets.** We expect foundation-model capabilities to keep advancing. Workflows, prompts, Skills and execution logs linked to business outcomes and human corrections will be among an organization's most important AI assets. Workflows describe how work gets done; prompts express objectives and standards; Skills package methods into capabilities; logs and feedback show whether those methods work in practice. Preserve traceable, reviewable experience and apply access and retention policies to raw data. Accumulating unlimited logs does not establish their value.
+
+**An organization-controlled, privately deployed small model is a business option worth evaluating.** When the total cost of frontier-model calls, long contexts and human review is high for frequent tasks, or generic outputs do not sufficiently match business conventions, validated business samples can support small-model fine-tuning. Here, a “proprietary private small model” means an organization controls operation and access while keeping its proprietary data and fine-tuned artifacts private. It can build on a base model whose license permits that use; this does not imply training from scratch or owning all rights to the base model. Open platform source and private enterprise data and models can be managed separately.
+
+### Combining strong models with private small models
+
+| Task conditions | Suggested approach | Decision criteria |
+|---|---|---|
+| New scenarios, complex problems or insufficient examples | Use a strong model for exploration, with business review | Quality of judgment, verifiability and exploration value |
+| Frequent tasks, stable rules and reliable samples | Use a private small model after evaluation | Business metrics, latency, total cost per task and maintenance cost |
+| Exceptions the small model cannot handle reliably | Escalate to a person, or to a strong model where data authorization permits | Explicit failure signals and escalation conditions; retain the outcome |
+| New feedback and corrections | Update knowledge, prompts, Skills or training samples | Identify the cause before deciding whether to retrain |
+
+This is a direction for **capability accumulation and using different models for different tasks**. Model prices change, and private deployment has compute and operational costs. Choose using the same business test set and measured workloads. The project has foundations for model connections, training and deployment to target skills; general automatic model selection, cost optimization and fallback across models still require scenario-specific adaptation and validation.
+
+**Learning should be driven by actual outcomes.** A failed task may require a correction to data, knowledge, tools or rules. Model training becomes appropriate when the problem warrants it and the available samples and evaluation conditions are sufficient. Improvement depends on identifying the layer that needs to change.
+
+**People will focus more on objectives, standards and exceptional cases.** Agents can perform bounded steps, while accountability, permission grants and consequential decisions still need identifiable owners. Reliable collaboration should let people inspect, intervene and correct execution.
+
+**Execution frameworks can evolve while enterprise capability assets endure.** A custom Harness lets an organization choose orchestration and execution methods for its tasks. The platform connects these environments through stable authorization, version, input/output and evidence interfaces. We aim to preserve validated business rules, skills and evaluation materials when a model or Harness changes. Moving between runtimes still requires adaptation and regression testing.
+
+| Direction | Existing foundation | What we aim to improve |
+|---|---|---|
+| A reusable team capability library | Skill versions, portals, project applications and access structures | Easier discovery, composition and reuse across teams |
+| Explainable human–AI collaboration | Reviews, execution records, tasks and feedback | Clearer handoffs, recovery and business acceptance workflows |
+| Evidence-based improvement | Knowledge, learning provenance, samples and training controls | Stronger data selection, evaluation baselines and controlled rollout |
+
+This direction depends on accountable business teams, usable data, clear access boundaries and standards for checking outcomes. **SkillForge aims to become an enterprise AI capability system that accumulates through real work.**
+
+<a id="case-study"></a>
+
+## About the author and career interests
+
+I have **over 10 years of product experience** across consumer applications, enterprise SaaS and smart hardware, with experience in product growth, cross-functional team management and enterprise AI implementation. I am seeking **product leadership, senior specialist or AI product roles in Shanghai**.
+
+## Current edition at a glance
 
 | Scope | Current status |
 |---|---|
@@ -65,6 +110,26 @@ The project is positioned as an **enterprise AI capability collaboration and ass
 | Nodes, business integrations, model training and deployment | Require configured services and hardware; no enterprise data, model weights or production acceptance are included |
 
 Use this README for setup. Historical “implemented” or “released” labels in design documents are not acceptance results for this edition. See the [documentation review](docs/public/DOCUMENTATION_REVIEW.en.md).
+
+<a id="screenshots"></a>
+
+## Core capabilities in screenshots
+
+These are the **actual public-edition frontend with synthetic fixtures**, illustrating the product's interfaces and workflow. Tasks, nodes, model states and numbers are examples—not enterprise records, real training results or production acceptance evidence. Click an image for the original. [Sources and reproduction](docs/screenshots/README.md).
+
+**Capability hall: employees find capabilities by department and business scenario through a shared entry point.**
+
+[![Capability hall with departmental filters and business capabilities; synthetic data](docs/screenshots/capability-hall.jpg)](docs/screenshots/capability-hall.jpg)
+
+| Turn business methods into Skills | Compose skills into workflows |
+|---|---|
+| [![Skill authoring with business requirements, interview and output controls; synthetic data](docs/screenshots/skill-authoring.jpg)](docs/screenshots/skill-authoring.jpg) | [![Playbook canvas with dependencies, timeouts and failure policies; synthetic data](docs/screenshots/workflow-canvas.jpg)](docs/screenshots/workflow-canvas.jpg) |
+| Define triggers, criteria, outputs and human confirmation. This image shows requirement entry; no model generation was performed. | Inspect step dependencies, sequence, timeouts and failure policies in a read-only workflow preview. |
+
+| Retain knowledge and training data from execution | Observe nodes, schedules and versions |
+|---|---|
+| [![Learning flow from raw records through cleaning, fine-tuning, evaluation and deployment; synthetic data](docs/screenshots/learning-flow.jpg)](docs/screenshots/learning-flow.jpg) | [![Node operations with availability, schedules, Git versions and execution records; synthetic data](docs/screenshots/node-operations.jpg)](docs/screenshots/node-operations.jpg) |
+| View records, retained assets, training, evaluation and deployment together, with entry points for human review. | Compare platform and node versions, and inspect schedules, failures and execution results. |
 
 <a id="product"></a>
 
@@ -376,48 +441,9 @@ Automatic training, automatic training dispatch and automatic deployment approva
 
 Code evidence: [learning events and relationships](app/learning/models.py), [extraction and routing](app/learning/service.py), [training assets and deployment models](app/training/models.py), [training and deployment services](app/training/service.py), [Bridge training runners](bridge/skillforgebridge.py) and [runtime model selection](app/execution/model_context.py). See the [validation record](docs/public/VALIDATION.md) for the limits of actual external training and production verification.
 
-<a id="future"></a>
-
-## 7. Our view of the future
-
-The following describes product direction and judgment, not completed functionality or an inevitable industry outcome.
-
-**Enterprise AI will increasingly be evaluated through tasks that can be accepted or rejected.** Beyond an answer, teams need to know which data was used, what actions were completed, where confirmation was required and how a failure can be recovered. SkillForge organizes this information around tasks, versions, tools and execution evidence.
-
-**Organizations will need capability assets that can accumulate over time.** People, models and tools may change, while validated business rules, skill versions, cases and evaluation standards remain reusable. The product aims to make these assets discoverable, composable and maintainable, reducing repeated implementation across teams.
-
-**As models become stronger, organizations need ownership of their business assets.** We expect foundation-model capabilities to keep advancing. Workflows, prompts, Skills and execution logs linked to business outcomes and human corrections will be among an organization's most important AI assets. Workflows describe how work gets done; prompts express objectives and standards; Skills package methods into capabilities; logs and feedback show whether those methods work in practice. Preserve traceable, reviewable experience and apply access and retention policies to raw data. Accumulating unlimited logs does not establish their value.
-
-**An organization-controlled, privately deployed small model is a business option worth evaluating.** When the total cost of frontier-model calls, long contexts and human review is high for frequent tasks, or generic outputs do not sufficiently match business conventions, validated business samples can support small-model fine-tuning. Here, a “proprietary private small model” means an organization controls operation and access while keeping its proprietary data and fine-tuned artifacts private. It can build on a base model whose license permits that use; this does not imply training from scratch or owning all rights to the base model. Open platform source and private enterprise data and models can be managed separately.
-
-### Combining strong models with private small models
-
-| Task conditions | Suggested approach | Decision criteria |
-|---|---|---|
-| New scenarios, complex problems or insufficient examples | Use a strong model for exploration, with business review | Quality of judgment, verifiability and exploration value |
-| Frequent tasks, stable rules and reliable samples | Use a private small model after evaluation | Business metrics, latency, total cost per task and maintenance cost |
-| Exceptions the small model cannot handle reliably | Escalate to a person, or to a strong model where data authorization permits | Explicit failure signals and escalation conditions; retain the outcome |
-| New feedback and corrections | Update knowledge, prompts, Skills or training samples | Identify the cause before deciding whether to retrain |
-
-This is a direction for **capability accumulation and using different models for different tasks**. Model prices change, and private deployment has compute and operational costs. Choose using the same business test set and measured workloads. The project has foundations for model connections, training and deployment to target skills; general automatic model selection, cost optimization and fallback across models still require scenario-specific adaptation and validation.
-
-**Learning should be driven by actual outcomes.** A failed task may require a correction to data, knowledge, tools or rules. Model training becomes appropriate when the problem warrants it and the available samples and evaluation conditions are sufficient. Improvement depends on identifying the layer that needs to change.
-
-**People will focus more on objectives, standards and exceptional cases.** Agents can perform bounded steps, while accountability, permission grants and consequential decisions still need identifiable owners. Reliable collaboration should let people inspect, intervene and correct execution.
-
-**Execution frameworks can evolve while enterprise capability assets endure.** A custom Harness lets an organization choose orchestration and execution methods for its tasks. The platform connects these environments through stable authorization, version, input/output and evidence interfaces. We aim to preserve validated business rules, skills and evaluation materials when a model or Harness changes. Moving between runtimes still requires adaptation and regression testing.
-
-| Direction | Existing foundation | What we aim to improve |
-|---|---|---|
-| A reusable team capability library | Skill versions, portals, project applications and access structures | Easier discovery, composition and reuse across teams |
-| Explainable human–AI collaboration | Reviews, execution records, tasks and feedback | Clearer handoffs, recovery and business acceptance workflows |
-| Evidence-based improvement | Knowledge, learning provenance, samples and training controls | Stronger data selection, evaluation baselines and controlled rollout |
-
-This direction depends on accountable business teams, usable data, clear access boundaries and standards for checking outcomes. **SkillForge aims to become an enterprise AI capability system that accumulates through real work.**
-
 <a id="technology"></a>
 
-## 8. Code and technology
+## 7. Code and technology
 
 ```mermaid
 flowchart TD
@@ -445,15 +471,9 @@ Control services, business assets, execution environments and external systems h
 
 See [architecture and code evidence](docs/public/ARCHITECTURE.md) for the underlying models and boundaries. Supporting documents are currently primarily in Chinese.
 
-<a id="case-study"></a>
-
-## About the author and career interests
-
-I have **over 10 years of product experience** across consumer applications, enterprise SaaS and smart hardware, with experience in product growth, cross-functional team management and enterprise AI implementation. I am seeking **product leadership, senior specialist or AI product roles in Shanghai**.
-
 <a id="quickstart"></a>
 
-## 9. Run locally
+## 8. Run locally
 
 Clone the public repository below for local deployment. If Docker is available, the [isolated preview deployment guide](deploy/preview/README.md) describes using separate storage and locally generated credentials.
 
@@ -505,7 +525,7 @@ The database backup script is not a complete disaster-recovery solution. The dat
 
 <a id="validation"></a>
 
-## 10. Validation, documentation and release status
+## 9. Validation, documentation and release status
 
 ```bash
 python scripts/check_public_distribution.py

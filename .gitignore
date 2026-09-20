@@ -103,3 +103,9 @@ vendor/
 
 .build/
 web/public/playbook-editor/
+
+# Reviewed public product screenshots and their reproduction notes
+!docs/screenshots/
+docs/screenshots/*
+!docs/screenshots/*.jpg
+!docs/screenshots/README.md

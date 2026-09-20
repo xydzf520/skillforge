@@ -81,3 +81,10 @@ def test_continuous_media_creation_requires_explicit_recipe_and_deadline(monkeyp
     path.write_text(json.dumps({'project_id': 'example-project', 'stop_create_at': '2030-01-01T00:00:00Z'}))
     assert continuous_fill.create_window_status(datetime(2030, 1, 1, 7, 59))['open']
     assert not continuous_fill.create_window_status(datetime(2030, 1, 1, 8, 0))['open']
+
+
+def test_reviewed_jpeg_screenshots_have_a_scoped_binary_exception():
+    jpeg = b'\xff\xd8\xff\xe0\x00synthetic-jpeg-header'
+    assert not inspect_file('docs/screenshots/example.jpg', jpeg)
+    assert inspect_file('private/example.jpg', jpeg)
+    assert inspect_file('docs/screenshots/example.jpg', b'not-an-image\x00')
