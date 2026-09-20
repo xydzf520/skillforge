@@ -14,7 +14,7 @@ SkillForge 是一个可自行部署的**企业 AI 工作台与技能协作平台
 
 > 当前为 **公开预览版**，源码采用 Apache-2.0 发布，包含 SK 品牌界面与独立部署配置。[最新复核](docs/public/RELEASE_CHECK_20260920.md)包含已通过检查与全量后端尚未通过的范围。已有代码和本地验证记录；外部系统、真实训练及生产部署需要单独配置与验收。许可与发布范围见[发布边界](docs/public/RELEASE_BOUNDARY.md)。
 
-阅读导航：[企业价值](#value) · [未来判断](#future) · [关于作者与求职方向](#case-study) · [核心能力截图](#screenshots) · [产品形态](#product) · [场景与价值验收](#enterprise) · [协作与自建 Harness](#harness) · [编写 Skill](#authoring) · [企业资产](#assets) · [数据与训练完整流程](#training) · [技术](#technology) · [启动](#quickstart) · [验证](#validation)
+阅读导航：[企业价值](#value) · [未来判断](#future) · [关于作者与求职方向](#case-study) · [核心能力截图](#screenshots) · [产品形态](#product) · [Project 项目管理](#projects) · [共享 Skill 与插件](#sharing) · [SDK 接入](#project-sdk) · [场景与价值验收](#enterprise) · [协作与自建 Harness](#harness) · [编写 Skill](#authoring) · [企业资产](#assets) · [数据与训练完整流程](#training) · [技术](#technology) · [启动](#quickstart) · [验证](#validation)
 
 <a id="value"></a>
 
@@ -192,6 +192,77 @@ SkillForge 是一个可自行部署的**企业 AI 工作台与技能协作平台
 | 管理与衡量 | 组织权限、提示词版本、模型配置、用量成本与审计 | 明确谁可以做什么、使用什么配置及产生多少已记录用量 |
 
 以上有对应代码基础，具体可用范围受配置与验收限制。业务 Agent 蓝图与节点是不同对象；内部市场也不代表已运营公共交易市场。[能力地图](docs/public/CAPABILITIES.md)列出了各模块入口及限制。
+
+<a id="projects"></a>
+
+### Project：统一管理每个人、每个部门做出的应用
+
+**让个人做出的工具成为团队找得到、用得上、有人维护的企业项目。** 员工借助 Codex、Claude Code 或其他开发工具制作的看板、表单、分析页和内部工具，可以接入同一个 Project 目录。企业按负责人、部门、可见范围、版本和运行记录管理这些成果，减少应用散落在个人电脑、聊天链接或临时服务中的情况。
+
+[![Project 企业项目目录：按部门、类型和运行状态统一组织应用，合成示例](docs/screenshots/project-applications.jpg)](docs/screenshots/project-applications.jpg)
+
+| 企业要管理什么 | Project 中如何承载 |
+|---|---|
+| 谁做的、由谁维护 | 项目保存负责人、部门归属、说明与入口；目录提供“我创建的”“本部门”“全公司”等视图 |
+| 谁可以使用 | 项目支持个人、部门和全公司可见范围；查看应用、编辑项目、读取他人的运行记录分别受权限约束 |
+| 交付了哪个版本 | 静态应用包或外部网页入口关联项目版本；包上传保留校验值，运行记录关联版本 |
+| 如何接入公共能力 | 在 `projectforge.yaml` 中声明入口、能力与输出约定；通过 Project Gateway / SDK 使用授权模型、工具和数据 |
+| 用过以后留下什么 | 关联使用者、输入、输出、能力调用、报告、待办和运行 trace；经配置与治理的记录可进入学习资产流程 |
+
+**从个人创作到企业使用：** 定义业务任务 → 用开发工具制作应用 → 确认负责人和部门 → 检查项目包与能力声明 → 有权提交的成员上传或登记 → 员工在项目目录打开 → 回传结果与反馈 → 维护下一版本。
+
+`sf project init --path .` 准备项目声明，`sf project doctor --path .` 检查入口与约定，`sf project submit --path .` 通过平台接口上传静态包或登记外部 URL。提交前需核对 `projectforge.yaml` 的归属与可见范围；接入步骤见[项目与开发工具使用指南](docs/guides/sf-codex-claude-workflow.md)，最小材料见[合成项目示例](docs/examples/projects/README.md)。
+
+当前 Project 主要承载轻量网页、看板、内部工具与外部入口；带独立后端的应用仍需自己的运行环境。项目登记不代表自动接管个人电脑上的所有代码，应用可见也不代表所有成员都能读取其他人的输入输出。Project 上传登记与 Skill 审核发布是不同流程，仍需按应用风险配置验收与上线规则。
+
+<a id="sharing"></a>
+
+### Codex 等开发工具：共享 Skill、工具和项目成果
+
+**一位成员验证过的方法，可以成为其他成员在 Codex 中发现和复用的 Skill。** SkillForge 提供 `sf` CLI、Codex 插件入口与 MCP 接入；Claude Code 可使用同一 CLI 和仓库中的命令说明。个人和部门积累的不只是一个应用，也包括完成业务任务的方法、规则、提示词、工具约定和版本依据。
+
+| 共享层次 | 共享什么 | 同事如何使用 |
+|---|---|---|
+| **Skill：复用方法** | 业务说明、提示词、脚本、输入输出约定及技能包版本 | 按本人／部门／可见范围发现技能，获授权后拉取或安装到本地工作区，继续使用、测试或改进 |
+| **MCP：复用工具与数据接入** | 平台登记的组织查询、数据能力、运行查询与分析等工具 | 在 Codex 或其他兼容客户端查看目录，按当前身份通过平台调用，无需每人重复连接业务系统 |
+| **Project：复用业务应用** | 已制作的网页、看板和内部工具 | 业务同事在统一目录打开应用；开发者通过 CLI、SDK 和 API 接入及维护 |
+
+| 在开发工具中发现共享 Skill | 在平台查看共享工具能力 |
+|---|---|
+| [![SF 命令中心：我的 Skill、部门 Skill 与项目接入命令，合成目录](docs/screenshots/shared-skill-commands.jpg)](docs/screenshots/shared-skill-commands.jpg) | [![MCP 能力目录：授权组织查询、数据能力与运行分析工具，合成目录](docs/screenshots/shared-mcp-capabilities.jpg)](docs/screenshots/shared-mcp-capabilities.jpg) |
+| `sf` 插件把技能发现、项目接入等操作带进开发工作流；图片只展示命令，没有执行上传或安装。 | 查找工具、了解读写属性及调用入口；图片中的目录为选取的合成示例，调用数为零。 |
+
+共享 Skill 的流程是 **个人沉淀 → 测试并提交审核 → 按授权范围共享 → 同事安装复用 → 修改后再次测试、提交审核**。本地安装保留技能 ID 与基础版本；安装、修改、审核和发布分别记录，不能把“下载到本地”当作“已发布给全公司”。
+
+在已安装 `sf` 并登录自己的 SkillForge 后，可以这样发现和复用：
+
+```bash
+sf skill list --scope mine
+sf skill list --scope department
+sf skill list --scope visible
+sf skill install <skill_id> --path ./skills
+sf skill status --path ./skills/<skill_id>
+sf mcp catalog
+```
+
+修改后的 Skill 通过 `sf skill submit --path ./skills/<skill_id>` 提交审核。目录与下载受平台权限限制；共享的是获授权的技能资产和能力入口，不是个人 Codex 账号、订阅、对话历史或上游密钥。插件使用外部开发工具，并不表示公开版已经恢复内置 Workbench 编程运行时。
+
+<a id="project-sdk"></a>
+
+### SDK：让网页、后端服务和自建 Harness 使用同一套能力
+
+插件服务于人的开发工作流，**SDK 服务于程序的运行与集成**。同一套平台能力既可从 Codex 中调用，也可由项目页面、后端服务或自建 Harness 调用，并关联到相应项目与运行记录。
+
+| 接入方式 | 适用位置 | 已有代码能力 |
+|---|---|---|
+| [浏览器 Project Gateway SDK](web/public/project-gateway-sdk.js) | 平台宿主中的网页，或完成宿主适配的外部页面 | 通过父窗口取得运行上下文，记录输入、调用声明的能力、回传报告和待办；网页不持有上游模型密钥 |
+| [Node / TypeScript Project SDK](sdk/node/index.ts) | 后端服务、自动化程序、自建 Harness | 使用项目凭据创建运行、调用能力、提交输出、上传资产和读取 trace；提供超时、错误分类及有限重试 |
+| [Python Project SDK](sdk/python/skillforge_project_sdk.py) | Python 服务、数据处理和 Agent 程序 | 提供相应的项目运行接口，并支持训练样本与数据集版本等接入方法 |
+| [Skill 运行 SDK](app/skill_runtime_sdk/skillforge_sdk.py) | 获授权运行环境中的 Skill 脚本 | 使用执行上下文访问平台数据／工具和分析能力，并保留数据依据 |
+
+基本调用链为 **项目身份 → 创建运行 → 记录输入 → 调用授权能力 → 回传输出／报告／待办 → 查看 trace → 按治理规则保留可复用经验**。Project SDK 凭据按项目与 scope 管理，具有有效期和吊销入口；后端凭据留在服务端。模型、工具和训练环境仍需部署者配置，运行日志也不会仅因接入 SDK 就自动成为合格训练集。
+
+SDK 以仓库源码提供，不意味着已经发布到 npm / PyPI 或任意客户端都能免适配安装。[Project 数据模型](app/projects/models.py)、[API](app/projects/router.py)及[项目服务](app/projects/service.py)给出归属、版本、权限与执行记录的具体实现。
 
 <a id="enterprise"></a>
 

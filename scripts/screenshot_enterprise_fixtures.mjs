@@ -48,5 +48,27 @@ export function enterpriseFixtures(state) {
     '/api/audit/detail-fields': { fields: [{ key: 'reason', label: '原因' }, { key: 'username', label: '用户名' }] },
   };
   for (const user of users) responses[`/api/users/${user.id}/detail`] = user;
+  const commandGroups = [
+    { title: '发现与复用共享能力', items: [
+      { command: 'sf skill list --scope department', description: '查看当前账号可见的部门共享技能' },
+      { command: 'sf skill list --scope mine', description: '查看自己的技能资产' },
+      { command: 'sf skill install <skill_id> --path ./skills', description: '将获授权的共享 Skill 安装到本地工作区' },
+      { command: 'sf mcp catalog', description: '发现平台授权的工具与数据能力' },
+    ] },
+    { title: '个人和部门项目接入', items: [
+      { command: 'sf project init --path .', description: '准备项目入口与 projectforge.yaml' },
+      { command: 'sf project doctor --path .', description: '检查入口、能力声明与输出约定' },
+      { command: 'sf project submit --path .', description: '通过平台接口提交项目，保留归属和版本' },
+    ] },
+  ];
+  const sharedTools = [
+    ['skillforge_org_search_users', '查询当前账号可见的组织成员，帮助确定任务交接对象。'],
+    ['skillforge_data_capability_list', '发现当前账号获授权的数据能力，供不同项目复用。'],
+    ['skillforge_raw_data_query', '按权限查询脱敏运行记录，为业务复核提供依据。'],
+    ['skillforge_run_analyze', '结合运行记录提出分析与改进建议；需要配置模型。'],
+  ].map(([name, provides]) => ({ name, provides, description: provides, platform: 'skillforge', write: false, count: 0, success_rate: null, command_template: `sf mcp call ${name} --args '{}'` }));
+  responses['/api/sf/catalog'] = { command_groups: commandGroups, commands: commandGroups.flatMap(group => group.items), mcp_capabilities: { tools: sharedTools }, plugin_update: {} };
+  responses['/api/sf/overview'] = { summary: { scope: 'global', total_calls: 0, api_calls: 0, mcp_calls: 0, report_count: 0, success_rate: null, generated_at: timestamp }, recent_events: { items: [], total: 0 }, health: { active_sessions: 0, alerts: [{ code: 'synthetic-preview', level: 'info', message: '合成演示目录，未连接插件会话或执行任何工具。' }] } };
+  responses['/api/sf/data'] = { items: [], total: 0, page: 1, page_size: 20 };
   return responses;
 }

@@ -14,7 +14,7 @@ The value proposition is that **an investment in completing today's task also re
 
 > This is a **public preview**, published under Apache-2.0 with SK branding and an isolated deployment configuration. The [latest release review](docs/public/RELEASE_CHECK_20260920.en.md) lists passed checks and remaining full-suite failures. Source code and local validation records are available; external integrations, actual training and production deployment require separate configuration and acceptance testing. See the [release boundary](docs/public/RELEASE_BOUNDARY.md) for licensing and publication status.
 
-Read: [Enterprise value](#value) · [Our view of the future](#future) · [Author and career interests](#case-study) · [Screenshots](#screenshots) · [Product](#product) · [Use cases and value validation](#enterprise) · [Collaboration and custom Harness](#harness) · [Authoring Skills](#authoring) · [Enterprise assets](#assets) · [Data and training lifecycle](#training) · [Technology](#technology) · [Quickstart](#quickstart) · [Validation](#validation)
+Read: [Enterprise value](#value) · [Our view of the future](#future) · [Author and career interests](#case-study) · [Screenshots](#screenshots) · [Product](#product) · [Project management](#projects) · [Shared Skills and plugins](#sharing) · [SDK integration](#project-sdk) · [Use cases and value validation](#enterprise) · [Collaboration and custom Harness](#harness) · [Authoring Skills](#authoring) · [Enterprise assets](#assets) · [Data and training lifecycle](#training) · [Technology](#technology) · [Quickstart](#quickstart) · [Validation](#validation)
 
 <a id="value"></a>
 
@@ -192,6 +192,77 @@ For example, an employee can run a business-analysis capability from a web form,
 | Govern and measure | Organizational access, prompt versions, model settings, usage cost and audit | Establish who can do what, which configuration was used and what usage was recorded |
 
 These have code foundations; availability depends on configuration and acceptance. A business Agent blueprint is distinct from a runtime node, and an internal market is not an established public trading marketplace. The [capability map](docs/public/CAPABILITIES.en.md) lists implementation entry points and limits.
+
+<a id="projects"></a>
+
+### Project: manage applications created by individuals and departments
+
+**Turn a person's useful tool into an application the team can find, use and maintain.** Dashboards, forms, analysis pages and internal tools built with Codex, Claude Code or other development tools can join one Project directory. Organizations track ownership, department, visibility, versions and run records, reducing reliance on personal computers, chat links and temporary services.
+
+[![Enterprise Project directory organized by department, application type and runtime state; synthetic examples](docs/screenshots/project-applications.jpg)](docs/screenshots/project-applications.jpg)
+
+| What the organization manages | How Project represents it |
+|---|---|
+| Ownership and maintenance | Owner, department, description and entry point; directory views include “created by me,” department and company |
+| Access | Private, department and company visibility; application access, project editing and access to other users' runs have separate checks |
+| Delivered versions | Static packages or external entry points link to project versions; uploads retain package checksums and runs reference versions |
+| Shared capabilities | `projectforge.yaml` declares entry points, capabilities and output contracts; Project Gateway / SDK provides authorized models, tools and data |
+| Evidence after use | User, input, output, capability calls, reports, tasks and run traces; configured and governed records can enter the learning-asset workflow |
+
+**From individual creation to organizational use:** define a task → build an application → confirm owner and department → check the package and capability declarations → an authorized member uploads or registers it → colleagues open it from the directory → results and feedback return → maintain the next version.
+
+`sf project init --path .` prepares the project manifest, `sf project doctor --path .` checks the entry and contracts, and `sf project submit --path .` uploads a static package or registers an external URL through platform APIs. Check ownership and visibility in `projectforge.yaml` before submission. See the [project and developer-tool workflow](docs/guides/sf-codex-claude-workflow.md) and [synthetic project examples](docs/examples/projects/README.md).
+
+Project currently focuses on lightweight web applications, dashboards, internal tools and external entry points. Applications with their own backend still need an execution environment. Registration does not automatically collect all code from personal devices, and application visibility does not grant everyone access to other users' inputs or outputs. Project registration and Skill review/publication are distinct workflows; application acceptance and release rules need to reflect their risks.
+
+<a id="sharing"></a>
+
+### Codex and other development tools: share Skills, tools and applications
+
+**A method validated by one member can become a Skill that colleagues discover and reuse from Codex.** SkillForge provides the `sf` CLI, a Codex plugin entry point and MCP integration. Claude Code can use the same CLI and the repository's command instructions. Individuals and departments retain business methods, rules, prompts, tool contracts and version evidence alongside their applications.
+
+| Shared layer | What is shared | How colleagues use it |
+|---|---|---|
+| **Skill: reusable methods** | Business instructions, prompts, scripts, input/output contracts and package versions | Discover own, department or visible skills; download or install authorized packages into a local workspace, then use, test or improve them |
+| **MCP: reusable tools and data access** | Registered tools for organization lookup, data capabilities, run queries and analysis | Inspect the catalog from Codex or another compatible client and call through the platform under the current identity |
+| **Project: reusable applications** | Web applications, dashboards and internal tools | Business users open applications in the shared directory; developers integrate and maintain them through CLI, SDK and API |
+
+| Discover shared Skills in the development workflow | Inspect shared tool capabilities |
+|---|---|
+| [![SF command center with own and department Skills plus project integration commands; synthetic catalog](docs/screenshots/shared-skill-commands.jpg)](docs/screenshots/shared-skill-commands.jpg) | [![MCP catalog with organization lookup, data capabilities and run analysis; synthetic catalog](docs/screenshots/shared-mcp-capabilities.jpg)](docs/screenshots/shared-mcp-capabilities.jpg) |
+| The `sf` plugin connects skill discovery and project integration to development. Commands are displayed only; no upload or installation was performed. | Discover tools, read/write attributes and invocation entry points. This is a selected synthetic catalog with zero calls. |
+
+The sharing workflow is **capture an individual method → test and submit for review → share within authorized scope → colleagues install and reuse → test and submit subsequent changes for review**. Local installation retains the Skill ID and base version. Installation, editing, review and publication are distinct; downloading a package does not publish it company-wide.
+
+After installing `sf` and signing in to your own SkillForge deployment:
+
+```bash
+sf skill list --scope mine
+sf skill list --scope department
+sf skill list --scope visible
+sf skill install <skill_id> --path ./skills
+sf skill status --path ./skills/<skill_id>
+sf mcp catalog
+```
+
+Submit changes with `sf skill submit --path ./skills/<skill_id>`. Catalog access and downloads are permission-bound. Sharing covers authorized Skill assets and capability entry points, not personal Codex accounts, subscriptions, conversation history or upstream credentials. Integration with external development tools does not restore the removed embedded Workbench coding runtime.
+
+<a id="project-sdk"></a>
+
+### SDKs: connect web apps, backend services and custom Harnesses
+
+Plugins support a person's development workflow; **SDKs support programmatic execution and integration**. The same platform capabilities can be called from Codex, project pages, backend services or a custom Harness, linked to the appropriate project and run.
+
+| Integration | Where it runs | Existing code capabilities |
+|---|---|---|
+| [Browser Project Gateway SDK](web/public/project-gateway-sdk.js) | Hosted web apps or external pages adapted to the host | Obtain run context from the parent window, record inputs, call declared capabilities and return reports/tasks without holding upstream model credentials |
+| [Node / TypeScript Project SDK](sdk/node/index.ts) | Backend services, automation and custom Harnesses | Create runs with project credentials, call capabilities, submit outputs, upload assets and read traces; includes timeouts, error classification and bounded retries |
+| [Python Project SDK](sdk/python/skillforge_project_sdk.py) | Python services, data processing and Agent programs | Corresponding project-run methods plus training-sample and dataset-version integration methods |
+| [Skill runtime SDK](app/skill_runtime_sdk/skillforge_sdk.py) | Skill scripts in authorized execution environments | Use execution context to access platform data, tools and analysis while retaining data evidence |
+
+The basic path is **project identity → create a run → record inputs → call authorized capabilities → return outputs/reports/tasks → inspect the trace → retain reusable evidence under governance rules**. Project SDK credentials have project scope, operation scopes, expiry and revocation; backend credentials stay server-side. Deployers still configure models, tools and training environments, and SDK integration alone does not make logs a qualified training dataset.
+
+SDKs are provided as repository source; this does not imply published npm/PyPI packages or installation in arbitrary clients without adaptation. The [Project models](app/projects/models.py), [API](app/projects/router.py) and [service](app/projects/service.py) show ownership, versioning, access checks and execution records.
 
 <a id="enterprise"></a>
 
