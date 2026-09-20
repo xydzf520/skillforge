@@ -6,6 +6,7 @@ import { dirname, resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import vm from 'node:vm';
+import { enterpriseFixtures } from './screenshot_enterprise_fixtures.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(resolve(root, 'web/package.json'));
@@ -68,9 +69,9 @@ findPulse(pulseAst);
 const pulseCode = ts.transpileModule('exports.data = ' + pulseLiteral.getText(pulseAst), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
 const pulseContext = vm.createContext({ exports: {} });
 vm.runInContext(pulseCode, pulseContext);
-for (const [path, data] of Object.entries({ '/api/learning/home': learningHome, '/api/learning/pulse': pulseContext.exports.data })) {
+for (const [path, data] of Object.entries({ '/api/learning/home': learningHome, '/api/learning/pulse': pulseContext.exports.data, ...enterpriseFixtures(state) })) {
   handlers.push({ regex: new RegExp('^http://127\\.0\\.0\\.1:' + port + path + '(\\?.*)?$'), prefix: path,
-    handle: route => route.fulfill({ body: JSON.stringify(data) }) });
+    handle: route => route.fulfill({ body: JSON.stringify(typeof data === 'function' ? data(new URL(route.request().url())) : data) }) });
 }
 
 const banner = `<script>localStorage.setItem('sf-theme','light');</script><style>*,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important}#screenshot-notice{position:fixed;bottom:0;left:0;right:0;height:30px;z-index:2147483647;display:flex;align-items:center;justify-content:center;gap:12px;background:#123d37;color:#fff;font:12px system-ui;letter-spacing:.3px;pointer-events:none}</style><div id="screenshot-notice">界面演示 · 合成示例数据 <span style="opacity:.72">Synthetic preview · No enterprise systems or models connected</span></div>`;

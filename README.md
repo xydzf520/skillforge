@@ -113,23 +113,45 @@ SkillForge 是一个可自行部署的**企业 AI 工作台与技能协作平台
 
 <a id="screenshots"></a>
 
-## 核心能力截图
+## 从企业视角看产品
 
-以下为**公开版实际前端界面 + 合成示例数据**，展示产品入口和工作方式。示例中的任务、节点、模型状态与统计数字均非企业运行数据，也不代表真实训练或生产验收结果。点击图片可查看原图。[截图来源与复现说明](docs/screenshots/README.md)。
+按 **员工使用 → 团队建设 → 管理治理 → 运行改进** 阅读以下 9 张截图，了解一项 AI 能力如何进入企业日常工作。
 
-**能力大厅：员工按部门和业务场景找到可用能力，从统一入口开始工作。**
+以下为**公开版实际前端界面 + 合成示例数据**，不是企业运行数据、真实训练结果或生产验收证明。点击图片可查看原图。[截图来源与复现说明](docs/screenshots/README.md)。
 
-[![能力大厅：按部门与场景发现业务能力，合成示例](docs/screenshots/capability-hall.jpg)](docs/screenshots/capability-hall.jpg)
+### 1. 员工使用：找到能力，打开业务应用
 
-| 把业务方法写成 Skill | 将多个技能组成流程 |
+| 能力大厅：从哪里开始 | 项目应用：如何交付给业务人员 |
+|---|---|
+| [![能力大厅：按部门与场景发现业务能力，合成示例](docs/screenshots/capability-hall.jpg)](docs/screenshots/capability-hall.jpg) | [![项目应用：客服质检、经营分析和知识整理的合成示例，展示部门与可见范围](docs/screenshots/project-applications.jpg)](docs/screenshots/project-applications.jpg) |
+| 按部门和业务场景发现能力，让员工找到适合当前任务的入口。 | 将轻量网页、看板和内部工具组织为项目，展示部门归属、可见范围与运行状态。图中应用是未运行的目录示例。 |
+
+### 2. 团队建设：把方法写成技能，再组合成流程
+
+| Skill 建设：明确业务标准 | 流程编排：明确步骤与例外 |
 |---|---|
 | [![Skill 建设：业务描述、采访补全和输出约定，合成示例](docs/screenshots/skill-authoring.jpg)](docs/screenshots/skill-authoring.jpg) | [![Playbook 画布：步骤依赖、超时与失败策略，合成示例](docs/screenshots/workflow-canvas.jpg)](docs/screenshots/workflow-canvas.jpg) |
-| 写清触发条件、判断标准、输出对象和人工确认要求；图中展示需求录入，未执行模型生成。 | 查看技能依赖、步骤顺序、超时和失败策略；图中为只读流程预览。 |
+| 写清触发条件、判断标准、输出对象和人工确认要求；图中展示需求录入，未执行模型生成。 | 查看技能依赖、步骤顺序、超时和失败策略，让团队能够检查和维护执行方法；图中为只读预览。 |
 
-| 从执行记录积累知识与训练数据 | 统一查看节点、定时与版本 |
+### 3. 管理治理：明确归属、权限和操作依据
+
+| 组织架构：谁属于哪个团队 | 角色权限：谁能在什么范围做什么 |
 |---|---|
-| [![学习与训练数据流：原始数据、清洗、微调、测试与部署，合成示例](docs/screenshots/learning-flow.jpg)](docs/screenshots/learning-flow.jpg) | [![节点管理：在线状态、调度、Git 版本与执行记录，合成示例](docs/screenshots/node-operations.jpg)](docs/screenshots/node-operations.jpg) |
-| 将原始记录、清洗资产、训练、评估和部署放在同一视图，并保留人工审核入口。 | 对照平台版本与节点版本，查看定时状态、失败记录和运行结果。 |
+| [![组织管理：部门、项目协作组、主要及兼任成员，合成示例](docs/screenshots/organization-management.jpg)](docs/screenshots/organization-management.jpg) | [![用户权限：部门管理员的资源、操作、范围和来源摘要，合成示例](docs/screenshots/role-permissions.jpg)](docs/screenshots/role-permissions.jpg) |
+| 展示部门与项目组层级、成员归属和管理者，支持理解跨部门协作关系。成员归属数包含兼任，不等于去重人数。 | 查看角色能力摘要、账号状态与部门范围。实际访问还由账号状态、组织归属及对象权限共同校验；这不是逐项勾选授权的界面。 |
+
+**审计追溯：管理员检查谁在何时操作了哪个对象，以及拒绝或处理原因。**
+
+[![审计日志：审核、权限拒绝和技能编辑记录，合成示例](docs/screenshots/audit-trail.jpg)](docs/screenshots/audit-trail.jpg)
+
+按用户、操作、结果和时间定位已记录事件，为排错和复核提供线索。截图中的审核及权限拒绝是合成记录，不是本次执行或安全验收的结果。
+
+### 4. 运行改进：观察交付，积累下一次改进依据
+
+| 节点管理：任务在哪里执行 | 数据与训练：哪些经验值得保留 |
+|---|---|
+| [![节点管理：在线状态、调度、Git 版本与执行记录，合成示例](docs/screenshots/node-operations.jpg)](docs/screenshots/node-operations.jpg) | [![学习与训练数据流：原始数据、清洗、微调、测试与部署，合成示例](docs/screenshots/learning-flow.jpg)](docs/screenshots/learning-flow.jpg) |
+| 对照平台版本与节点版本，查看定时状态、失败记录和运行结果。 | 将原始记录、清洗资产、训练、评估和部署放在同一视图，并保留人工审核入口；训练与部署仍需实际环境配置及验收。 |
 
 <a id="product"></a>
 

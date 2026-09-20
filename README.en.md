@@ -113,23 +113,45 @@ Use this README for setup. Historical “implemented” or “released” labels
 
 <a id="screenshots"></a>
 
-## Core capabilities in screenshots
+## An enterprise view of the product
 
-These are the **actual public-edition frontend with synthetic fixtures**, illustrating the product's interfaces and workflow. Tasks, nodes, model states and numbers are examples—not enterprise records, real training results or production acceptance evidence. Click an image for the original. [Sources and reproduction](docs/screenshots/README.md).
+Follow **employee use → team building → governance → operations and improvement** through these nine screenshots to see how AI capabilities fit into everyday work.
 
-**Capability hall: employees find capabilities by department and business scenario through a shared entry point.**
+These are the **actual public-edition frontend with synthetic fixtures**, not enterprise records, real training results or production acceptance evidence. The UI is shown in Chinese with English captions below. Click any image for the original. [Sources and reproduction](docs/screenshots/README.md).
 
-[![Capability hall with departmental filters and business capabilities; synthetic data](docs/screenshots/capability-hall.jpg)](docs/screenshots/capability-hall.jpg)
+### 1. Employee use: discover capabilities and open business applications
 
-| Turn business methods into Skills | Compose skills into workflows |
+| Capability hall: where to start | Project applications: delivery to business users |
+|---|---|
+| [![Capability hall with departmental filters and business capabilities; synthetic data](docs/screenshots/capability-hall.jpg)](docs/screenshots/capability-hall.jpg) | [![Project directory with customer-service QA, business analysis and knowledge tools; synthetic data](docs/screenshots/project-applications.jpg)](docs/screenshots/project-applications.jpg) |
+| Discover capabilities by department and scenario to find the right entry point for a task. | Organize lightweight web apps, dashboards and internal tools by department, visibility and runtime state. These are directory examples that have not been run. |
+
+### 2. Team building: turn methods into Skills and workflows
+
+| Skill authoring: define business standards | Workflow composition: define steps and exceptions |
 |---|---|
 | [![Skill authoring with business requirements, interview and output controls; synthetic data](docs/screenshots/skill-authoring.jpg)](docs/screenshots/skill-authoring.jpg) | [![Playbook canvas with dependencies, timeouts and failure policies; synthetic data](docs/screenshots/workflow-canvas.jpg)](docs/screenshots/workflow-canvas.jpg) |
-| Define triggers, criteria, outputs and human confirmation. This image shows requirement entry; no model generation was performed. | Inspect step dependencies, sequence, timeouts and failure policies in a read-only workflow preview. |
+| Define triggers, criteria, outputs and human confirmation. This image shows requirement entry; no model generation was performed. | Inspect dependencies, sequence, timeouts and failure policies so teams can review and maintain execution methods. This is a read-only preview. |
 
-| Retain knowledge and training data from execution | Observe nodes, schedules and versions |
+### 3. Governance: establish ownership, access and an audit trail
+
+| Organization: who belongs to each team | Role permissions: capabilities and scope |
 |---|---|
-| [![Learning flow from raw records through cleaning, fine-tuning, evaluation and deployment; synthetic data](docs/screenshots/learning-flow.jpg)](docs/screenshots/learning-flow.jpg) | [![Node operations with availability, schedules, Git versions and execution records; synthetic data](docs/screenshots/node-operations.jpg)](docs/screenshots/node-operations.jpg) |
-| View records, retained assets, training, evaluation and deployment together, with entry points for human review. | Compare platform and node versions, and inspect schedules, failures and execution results. |
+| [![Organization tree with departments, a project group, primary and secondary memberships; synthetic data](docs/screenshots/organization-management.jpg)](docs/screenshots/organization-management.jpg) | [![Department administrator capability summary by resource, operation, scope and source; synthetic data](docs/screenshots/role-permissions.jpg)](docs/screenshots/role-permissions.jpg) |
+| Inspect departments, project groups, memberships and managers to understand cross-team collaboration. Membership counts include secondary assignments, not unique headcount. | Inspect role summaries, account state and department scope. Actual access also depends on account state, organizational membership and object permissions; this is not a per-permission grant editor. |
+
+**Audit trail: inspect who acted on which object, when, and why an action was handled or denied.**
+
+[![Audit trail with approval, permission denial and skill editing events; synthetic data](docs/screenshots/audit-trail.jpg)](docs/screenshots/audit-trail.jpg)
+
+Find recorded events by user, action, result and time for investigation and review. Approval and denial events here are synthetic examples, not actions or security acceptance tests performed during this capture.
+
+### 4. Operations and improvement: observe delivery and retain useful evidence
+
+| Node operations: where tasks execute | Data and training: which experience to retain |
+|---|---|
+| [![Node operations with availability, schedules, Git versions and execution records; synthetic data](docs/screenshots/node-operations.jpg)](docs/screenshots/node-operations.jpg) | [![Learning flow from raw records through cleaning, training, evaluation and deployment; synthetic data](docs/screenshots/learning-flow.jpg)](docs/screenshots/learning-flow.jpg) |
+| Compare platform and node versions, and inspect schedules, failures and execution results. | View records, retained assets, training, evaluation and deployment together, with human review entry points. Actual training and deployment still require configured environments and acceptance checks. |
 
 <a id="product"></a>
 
