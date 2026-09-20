@@ -161,7 +161,7 @@ flowchart TD
 
 Strong models may help with planning, candidates and failure analysis. Private small models can serve evaluated, stable tasks. Switching requires evidence about quality, latency, maintenance and total cost, not model size or price alone. Keep related-source data out of independent evaluation splits; unreviewed model output is not a ground-truth label.
 
-The complete data-object, storage, training-approval, evaluation, deployment and rollback diagram remains in the [README training flow](../../README.en.md#training), avoiding a second independently maintained data flow. See the [capability map](CAPABILITIES.en.md) for current training and optimizer limitations.
+The complete data-object, storage, training-approval, evaluation, deployment and rollback diagram remains in the [data and training guide](DATA_AND_TRAINING.en.md#training), avoiding a second independently maintained data flow. See the [capability map](CAPABILITIES.en.md) for current training and optimizer limitations.
 
 ## Maintaining these diagrams
 

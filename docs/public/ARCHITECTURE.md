@@ -1,6 +1,6 @@
 # 企业 AI 能力如何积累与演进
 
-整体产品与实现边界见[能力地图](CAPABILITIES.md)；完整数据流与训练图见 [README](../../README.md#training)。本页侧重核心资产结构。
+整体产品与实现边界见[能力地图](CAPABILITIES.md)；完整数据流与训练图见[数据与训练专题](DATA_AND_TRAINING.md#training)。本页侧重核心资产结构。
 
 从角色和业务交接理解系统时，先阅读[企业运行图解](OPERATING_MODEL.md)：组织协作、业务交付、Harness 调用和改进决策；这些图将建议运行方式与当前实现状态分开标注。
 

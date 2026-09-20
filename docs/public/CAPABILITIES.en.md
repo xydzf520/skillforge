@@ -10,8 +10,8 @@ Reviewed on 2026-09-20. This document covers major product modules, frontend/bac
 |---|---|
 | What an enterprise deploys | README product form and the map below: browser workspace, control services, developer interfaces and execution nodes |
 | Enterprise adoption and human–AI collaboration | README rollout, custom Harness integration and the delivery process below |
-| Workflows, prompts, Skills and logs as assets | README assets and training; version, prompt, evidence and quality management below |
-| Data origins, training targets and destinations | README lifecycle diagram and implementation boundaries for knowledge, learning, training and deployment |
+| Workflows, prompts, Skills and logs as assets | [Data and training guide](DATA_AND_TRAINING.en.md); version, prompt, evidence and quality management below |
+| Data origins, training targets and destinations | [Data lifecycle diagram](DATA_AND_TRAINING.en.md#training) and implementation boundaries for knowledge, learning, training and deployment |
 | Custom Harness integration | Internal orchestration versus external Harness responsibilities; SDK/API/MCP/Bridge paths |
 | Strong models and private small models | README product direction, business benchmarks, total cost and deployment evidence |
 | Portfolio and résumé connection | [Product case](PORTFOLIO.en.md); establish code capabilities, personal responsibilities and actual outcomes separately |

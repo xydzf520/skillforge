@@ -52,7 +52,7 @@ These choices emphasize business priorities, handoffs, reuse, execution boundari
 | Gateway and distributed-execution product design | Coordinate application integration, capability calls, node execution, quotas and traceability | [Gateway responsibilities and boundaries](../guides/project-gateway-sdk.md#网关职责与分布式协作), [task queue](../../app/execution/task_queue.py), [scheduler](../../app/execution/scheduler.py) |
 | Platform and asset design | Manage Skills, workflows, prompts, feedback provenance and versions | [Asset architecture](ARCHITECTURE.md), [capability map](CAPABILITIES.en.md) |
 | Delivery and acceptance | Separate implementation, configuration, tests and actual business completion | [Validation record](VALIDATION.md), [value evaluation](../../README.en.md#value-measurement) |
-| Enterprise model evolution | Connect qualified samples, datasets, training, evaluation, deployment review and rollback | [Data and training flow](../../README.en.md#training) |
+| Enterprise model evolution | Connect qualified samples, datasets, training, evaluation, deployment review and rollback | [Data and training flow](DATA_AND_TRAINING.en.md#training) |
 
 HR can start with project scope and responsibility; business interviewers can discuss scenarios, tradeoffs and delivery; technical interviewers can follow interfaces, code and validation records. Job titles, dates, adoption and returns need personal and business evidence rather than inference from code or test counts.
 
