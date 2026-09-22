@@ -57,6 +57,8 @@ Project manages application entry points and runs; applications with their own b
 
 I have **over 10 years of product experience** across consumer applications, enterprise SaaS and smart hardware, with experience in product growth, cross-functional team management and enterprise AI implementation. I am seeking **product leadership, senior specialist or AI product roles in Shanghai**.
 
+**Contact: WeChat `164245026`** (please include your company and the role).
+
 <a id="edition"></a>
 <a id="validation"></a>
 
